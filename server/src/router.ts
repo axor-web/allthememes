@@ -12,16 +12,16 @@ interface IMeme {
 
 async function attachMemeToHashtags(memeDocument: IMeme, hashtags: string[]) {
   await Promise.all(hashtags.map(async (hashtag: string) => {
-    const hashtagDocument = HashtagModel.find({ name: hashtag });
-
+    const hashtagDocument = await HashtagModel.findOne({ name: hashtag });
+    
     if (hashtagDocument) { 
-      hashtagDocument.memeIds.push(memeDocument._id);
+      hashtagDocument.memesIds.push(memeDocument._id);
       await hashtagDocument.save();
     }
     else {
       await new HashtagModel({
         name: hashtag,
-        memeIds: [memeDocument._id]
+        memesIds: [ memeDocument._id ]
       }).save();
     }
   }));
@@ -35,11 +35,11 @@ app.listen(port, (error?: Error): void => {
   error ? console.error(error) : console.log(`listening port ${port}`);
 });
 
-app.use(express.json());
+app.use(express.json({extended: true}));
 
 app.get('/memes', async (request, response) => {
-  const from = request.body?.from ?? 0;
-  const to = request.body?.to ?? 20;
+  const from = request.query?.from ?? 0;
+  const to = request.query?.to ?? 20;
   
   let memes: IMeme[];
 
@@ -75,6 +75,7 @@ app.get('/meme', async (request, response) => {
 });
 app.post('/meme', async (request, response) => {
   const { url, hashtags } = request.body;
+  
   if (!url || hashtags.length < 2) { response.sendStatus(400); return; }
 
   try {
