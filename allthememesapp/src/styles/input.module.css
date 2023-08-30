@@ -1,0 +1,34 @@
+.input {
+  display: block;
+
+  border-radius: 6px;
+  border: 1px solid var(--grey);
+
+  background-color: var(--darkGrey);
+
+  padding: 12px;
+
+  font-size: var(--inputTextSize);
+  color: var(--textColor);
+
+  align-self: stretch;
+  flex: 1 1 auto;
+
+  width: 100%;
+
+  opacity: 1;
+  visibility: visible;
+
+  transition: opacity .3s visibility .3s;
+}
+.input::placeholder {
+  color: var(--placeholderColor);
+}
+.input_disabled, .input:disabled {
+  opacity: 0;
+  visibility: hidden;
+  position: absolute;
+}
+.input_invalid, .input:invalid {
+  border: 1px solid var(--red);
+}

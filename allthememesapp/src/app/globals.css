@@ -1,5 +1,25 @@
 :root {
-  
+  --purple: #A37BF4;
+  --darkPurple: #621DED;
+  --red: #FA004F;
+  --grey: #1B1E26;
+  --darkGrey: #13151B;
+
+  --backgroundColor: #000000;
+  --translucentBackgroundColor: rgba(8, 9, 13, 0.8);
+  --textColor: #FFFFFF;
+  --placeholderColor: #474747;
+
+  --inputTextSize: 17px;
+  --textSize: 14px;
+  --actionTextSize: 20px;
+  --statusHeadTextSize: 42px;
+  --uploadTextSize: 24px;
+
+  --backdropFilter: blur(10px);
+
+  --loadingColor: rgba(0, 0, 0, 0.60);
+  --loadingBlur: blur(50px);
 }
 
 * {
@@ -10,6 +30,11 @@
   outline: none;
   border: none;
   text-decoration: none;
+
+  font-family: Manrope, Roboto, Helvetica, Arial, sans-serif;
+}
+*::selection {
+  background-color: var(--darkPurple);
 }
 
 html,
@@ -19,7 +44,21 @@ body {
 }
 
 body {
-  
+  background-color: var(--backgroundColor);
+  padding: 20px;
+
+  min-height: 100vh;
+
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-template-rows: min-content 1fr min-content;
+  place-items: stretch;
+  justify-content: center;
+}
+@supports (min-height: 100dvh) {
+  body {
+    min-height: 100dvh;
+  }
 }
 
 a {

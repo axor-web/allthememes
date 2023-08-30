@@ -1,0 +1,46 @@
+.suggestion-list {
+  position: absolute;
+  top: 100%;
+  left: -1px;
+
+  width: min(500px, 100%);
+  min-height: 200px;
+
+  background-color: var(--darkGrey);
+
+  border: 1px solid var(--grey);
+
+  border-bottom-left-radius: 20px;
+  border-bottom-right-radius: 20px;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: stretch;
+
+  overflow: hidden;
+
+  z-index: 1000;
+}
+
+.suggestion {
+  cursor: pointer;
+
+  padding: 12px;
+  
+  border-bottom: 1px solid var(--grey);
+
+  background-color: transparent;
+
+  transition: background-color .15s;
+}
+.suggestion:last-of-type {
+  border-bottom: none;
+}
+.suggestion_active {
+  background-color: var(--darkPurple);
+}
+
+.no-suggestion {
+  padding: 12px;
+}

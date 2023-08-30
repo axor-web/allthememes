@@ -1,0 +1,24 @@
+.button {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  cursor: pointer;
+
+  border-radius: 6px;
+
+  font-size: var(--textSize);
+  font-weight: 400;
+  color: var(--textColor);
+
+  background-color: var(--darkPurple);
+
+  padding: 8px 15px;
+}
+.button_size_big {
+  padding: 15px 52px;
+}
+.button_size_huge {
+  padding: 20px 40px;
+  text-transform: uppercase;
+}

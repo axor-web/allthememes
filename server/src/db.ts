@@ -1,4 +1,4 @@
-const { Schema, model, connect } = require('mongoose');
+import { connect, model, Schema } from "mongoose";
 
 const server = 'localhost:27017';
 const database = 'memes';
@@ -9,16 +9,12 @@ class Database {
   }
 
   #connect() {
-      connect(`mongodb://${server}/${database}`, 
-        {  
-          useNewUrlParser: true,  
-          useUnifiedTopology: true,
-        })
+      connect(`mongodb://${server}/${database}`)
       .then(() => {
-        console.log('Database connection successful');
+        console.log('🟢 Database connection successful');
       })
       .catch((error: Error) => {
-        console.error(`Database connection error: ${error}`);
+        console.error(`❌ Database connection error: ${error}`);
       });
   }
 }
@@ -33,8 +29,6 @@ const hashtagSchema = new Schema({
   memesIds: { type: Array, required: true }
 }, { collection: 'hashtags' })
 
-module.exports = {
-  db: new Database(),
-  MemeModel: model('Meme', memeSchema),
-  HashtagModel: model('Hashtag', hashtagSchema)
-};
+export const db = new Database();
+export const MemeModel = model('Meme', memeSchema);
+export const HashtagModel = model('Hashtag', hashtagSchema);

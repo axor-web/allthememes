@@ -1,0 +1,68 @@
+.outer-input {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  flex-flow: wrap;
+  gap: 5px;
+
+  position: relative;
+}
+.outer-input_active {
+  border-bottom-left-radius: 0;
+}
+.outer-input_disabled {
+  position: absolute;
+}
+
+.hashtag {
+  color: var(--textColor);
+  font-size: 14px;
+  font-weight: 200;
+
+  background-color: var(--translucentBackgroundColor);
+
+  border-radius: 20px;
+
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  gap: 3px;
+
+  height: 100%;
+  padding-left: 8px;
+  padding-right: 4px;
+}
+
+.deletebutton {
+  width: 15px;
+  height: 15px;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  background-color: var(--grey);
+
+  border-radius: 100%;
+
+  cursor: pointer;
+}
+.deletebutton svg {
+  width: 9px;
+  height: 9px;
+}
+
+.input {
+  display: block;
+
+  align-self: stretch;
+  flex: 1 1 auto;
+
+  background-color: transparent;
+
+  font-size: var(--inputTextSize);
+  color: var(--textColor);
+}
+.input::placeholder {
+  color: var(--placeholderColor);
+}
