@@ -1,0 +1,90 @@
+.wrapper {
+  position: relative;
+  aspect-ratio: 1/1;
+}
+
+.container {
+  background-color: var(--darkGrey);
+  border-radius: 20px;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  aspect-ratio: 1/1;
+
+  position: relative;
+
+  overflow: hidden;
+}
+
+.button {
+  background-color: transparent;
+  cursor: pointer;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  width: max(50%, 120px);
+  height: max(50%, 120px);
+}
+.button svg {
+  width: 100px;
+  height: 100px;
+}
+
+.hidden {
+  opacity: 0;
+  visibility: hidden;
+}
+
+
+.preview {
+  width: 100%;
+  height: 100%;
+
+  position: absolute;
+  top: 0;
+  left: 0;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  z-index: 800;
+}
+.preview:hover .remove-button {
+  opacity: 1;
+  visibility: visible;
+}
+
+.remove-button {
+  border-radius: 50%;
+  backdrop-filter: blur(20px);
+  background-color: rgba(8, 9, 13, .5);
+
+  position: absolute;
+
+  z-index: 999;
+
+  width: min(50%, 150px);
+  height: min(50%, 150px);
+
+  opacity: 0;
+  visibility: hidden;
+
+  transition: opacity .2s, visibility .2s;
+}
+.remove-button svg {
+  width: 62px;
+  height: 62px;
+}
+
+
+@media (max-width: 600px) {
+  .preview .remove-button {
+    opacity: 1;
+    visibility: visible;
+  }
+}

@@ -1,0 +1,170 @@
+.meme-page {
+  width: 100%;
+  height: auto;
+
+  display: grid;
+  grid-template-columns: minmax(300px, 800px) minmax(200px, 1fr);
+  grid-template-areas:
+  'image hashtags';
+  gap: 12px;
+}
+
+.meme-card {
+  aspect-ratio: 1/1;
+
+  border-radius: 20px;
+
+  background-color: var(--grey);
+
+  overflow: hidden;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  position: relative;
+
+  cursor: pointer;
+
+  max-width: 800px;
+
+  grid-area: image;
+}
+.meme-card:hover .meme-download {
+  opacity: 1;
+  visibility: visible;
+}
+.meme-card_loading::after {
+  content: '';
+  display: block;
+
+  position: absolute;
+  top: 0;
+  left: 0;
+
+  height: 100%;
+  width: 25%;
+
+  background-color: rgba(0, 0, 0, .75);
+
+  filter: blur(100px);
+
+  animation: loading 1s linear infinite;
+}
+@keyframes loading {
+  from {
+    transform: translateX(-165%);
+    left: 0;
+  }
+  to {
+    transform: translateX(100%);
+    left: 100%;
+  }
+}
+
+.meme-image {
+  width: 100%;
+  height: 100%;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  position: relative;
+
+  overflow: hidden;
+}
+.meme-image .img {
+  object-fit: cover;
+  
+  min-width: 100%;
+  min-height: 100%;
+}
+
+.meme-image svg {
+  width: 20%;
+  height: auto;
+}
+
+.meme-download {
+  position: absolute;
+
+  opacity: 0;
+  visibility: hidden;
+
+  transition: opacity .2s, visibility .2s;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  width: 30%;
+  height: 30%;
+
+  border-radius: 50%;
+
+  background-color: rgba(8, 9, 13, 0.80);
+  backdrop-filter: blur(4px);
+}
+.meme-download svg {
+  width: 53%;
+  height: auto;
+}
+
+.meme-hashtags {
+  width: 100%;
+  height: auto;
+
+  padding: 8px;
+
+  align-self: stretch;
+
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+  align-items: flex-start;
+  gap: 5px;
+
+  color: var(--textColor);
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 300;
+
+  overflow-x: scroll;
+
+  background-color: var(--grey);
+
+  border-radius: 20px;
+
+  grid-area: hashtags;
+}
+.meme-hashtag {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  color: var(--textColor);
+  font-size: 24px;
+  font-weight: 200;
+
+  padding: 6px 12px;
+
+  border-radius: 20px;
+  background-color: var(--translucentBackgroundColor);
+}
+
+
+@media (max-width: 600px) {
+  .meme-page {  
+    grid-template-columns: 1fr;
+    grid-template-rows: 1fr min-content;
+    grid-template-areas:
+    'image'
+    'hashtags';
+  }
+
+  .meme-card .meme-download {
+    opacity: 1;
+    visibility: visible;
+  }
+}

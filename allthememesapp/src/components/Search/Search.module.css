@@ -6,9 +6,11 @@
   gap: 20px;
   justify-content: center;
   align-items: flex-start;
+
+  position: relative;
 }
 .search-form {
-  width: 100%;
+  max-width: calc(100vw - 40px);
   align-self: stretch;
 
   display: flex;
@@ -16,4 +18,14 @@
   justify-items: stretch;
   align-items: center;
   gap: 12px;
+}
+
+
+
+@media (max-width: 600px) {
+  .search-form {
+    flex-direction: column;
+    justify-items: center;
+    align-items: stretch;
+  }
 }

@@ -1,9 +1,9 @@
 import { Router } from "express";
-import IMeme from "../../../common/types/IMeme";
-import { HashtagModel, MemeModel } from "../db";
+import IMeme from "../types/IMeme.js";
+import { HashtagModel, MemeModel } from "../db.js";
 import { Document, Types } from "mongoose";
 
-async function attachMemeToHashtags(memeDocument: Document<unknown, {}, { hashtags: any[]; url: string; }> & { hashtags: any[]; url: string; } & { _id: Types.ObjectId; }, hashtags: string[]) {
+async function attachMemeToHashtags(memeDocument: Document<unknown, {}, { hashtags: any[]; img: string; }> & { _id: Types.ObjectId; }, hashtags: string[]) {
   await Promise.all(hashtags.map(async (hashtag: string) => {
     const hashtagDocument = await HashtagModel.findOne({ name: hashtag });
     
@@ -22,15 +22,25 @@ async function attachMemeToHashtags(memeDocument: Document<unknown, {}, { hashta
 
 const router = Router();
 
-router.get('/meme', async (request, response) => {
+router.get('/', async (request, response) => {
   const id: string | undefined = request.query.id as string;
-  
-  if (!id) { response.sendStatus(404); return; }
+
+  if (!id) {
+    console.log('🟠 The requested meme was not found.');
+    response.sendStatus(404);
+    return;
+  }
 
   try {
     const meme: IMeme | null = await MemeModel.findById(id);
 
-    if (!meme) { response.sendStatus(404); return; }
+    if (!meme) {
+      console.log('🟠 The requested meme was not found.');
+      response.sendStatus(404);
+      return;
+    }
+
+    meme.img = `localhost:${3001}/image/${meme._id.toString()}.${meme.format ? meme.format.split('/')[1] : ''}`;
 
     response.status(200).json(meme);
   }
@@ -40,13 +50,22 @@ router.get('/meme', async (request, response) => {
   }
 });
 
-router.post('/meme', async (request, response) => {
-  const { url, hashtags } = request.body;
-  
-  if (!url || hashtags.length < 2) { response.sendStatus(400); return; }
+router.post('/', async (request, response) => {
+  const { img = '', hashtags = [], format = '' } = request.body;
 
+  if (!img || !format || hashtags.length < 1) {
+    response.sendStatus(400);
+    return;
+  }
+  
   try {
-    const meme = new MemeModel({url, hashtags});
+    const extension = format.split('/')[1];
+
+    if (!hashtags.includes(extension)) {
+      hashtags.push(extension);
+    }
+
+    const meme = new MemeModel({img, hashtags, format});
 
     const memeDocument = await meme.save();
     await attachMemeToHashtags(memeDocument, hashtags);

@@ -1,11 +1,11 @@
 'use client';
 
-import { FunctionComponent, useEffect, useState } from "react";
+import { FunctionComponent, useEffect, useRef, useState } from "react";
 import { SearchMode } from "../SearchMode/SearchMode";
 import { ChatGPTInput } from "../ChatGPTInput/ChatGPTInput";
 import { FindButton } from "../FindButton/FindButton";
 import { HashtagInput } from "../HashtagInput/HashtagInput";
-import IHashtag from "@/interfaces/IHashtag";
+import IHashtag from "@/types/IHashtag";
 import styles from './Search.module.css';
 import { useDispatch } from "react-redux";
 import { statusActions } from "@/redux/features/statusHeader";
@@ -13,22 +13,24 @@ import { hashtagActions } from "@/redux/features/hashtags";
 
 export const Search: FunctionComponent = () => {
   const [mode, setMode] = useState(false);
-  const [addedHashtags, setAddedHashtags] = useState(new Set() as Set<string | never>);
+  const addedHashtags = useRef(new Set() as Set<string | never>);
   const [allHashtags, setAllHashtags] = useState([] as (IHashtag | never)[]);
-  
-  useEffect(() => {
-    fetch('http://localhost:3001/hashtags', { next: { revalidate: 10 } })
-    .then((response) => response.json())
-    .then((hashtagObjects: IHashtag[]) => setAllHashtags(hashtagObjects));
-  });
 
   const dispatch = useDispatch();
   
+  useEffect(() => {
+    dispatch(statusActions.setStatus(`Let's find your meme!`));
+
+    fetch('http://localhost:3001/hashtags', { next: { revalidate: 100 } })
+    .then((response) => response.json())
+    .then((hashtagObjects: IHashtag[]) => setAllHashtags(hashtagObjects));
+  }, [dispatch]);
+  
   return (
-    <div className={styles.search}>
+    <section className={styles.search}>
       <SearchMode modeState={[mode, setMode]}></SearchMode>
       <form className={styles['search-form']}>
-        <HashtagInput hashtagsState={[addedHashtags, setAddedHashtags]} allHashtags={allHashtags.map((hashtagObject) => hashtagObject.name)} disabled={mode}></HashtagInput>
+        <HashtagInput addedHashtagsRef={addedHashtags} allHashtags={allHashtags.map((hashtagObject) => hashtagObject.name)} disabled={mode}></HashtagInput>
         <ChatGPTInput disabled={!mode}></ChatGPTInput>
 
         <FindButton onClickHandler={async () => {
@@ -38,11 +40,11 @@ export const Search: FunctionComponent = () => {
             dispatch(statusActions.setStatus('Analyzing your query'));
           }
 
-          dispatch(statusActions.setStatus('Finding memes'))
-          dispatch(hashtagActions.setHashtags([...addedHashtags]))
+          dispatch(statusActions.setStatus('Finding memes'));
+          dispatch(hashtagActions.setHashtags([...addedHashtags.current]));
           dispatch(hashtagActions.setIsSearch(true));
         }}></FindButton>
       </form>
-    </div>
+    </section>
   );
 }

@@ -4,11 +4,12 @@
   "description": "test server for allthememes project",
   "main": "./dist/router.js",
   "scripts": {
-    "start": "node --watch ./dist/router.js",
-    "build": "tsc --build"
+    "start": "tsc && node --watch ./dist/router.js",
+    "build": "tsc"
   },
   "author": "Alexey Koval",
   "license": "ISC",
+  "type": "module",
   "devDependencies": {
     "@types/express": "^4.17.17",
     "@types/node": "^20.4.5",
@@ -18,6 +19,7 @@
     "cors": "^2.8.5",
     "crypto": "^1.0.1",
     "express": "^4.18.2",
+    "http-compression": "^1.0.11",
     "mongodb": "^5.7.0",
     "mongoose": "^7.4.1"
   }

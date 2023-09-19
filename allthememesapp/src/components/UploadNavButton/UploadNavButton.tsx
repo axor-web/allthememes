@@ -7,7 +7,7 @@ interface Props {
   href?: string
 }
 
-export const UploadNavButton: FunctionComponent<Props> = ({ text = 'Upload your meme', href = './upload' }) => {
+export const UploadNavButton: FunctionComponent<Props> = ({ text = 'Upload your meme', href = '/upload' }) => {
   return (
     <Link href={href} className={styles.button}>{ text }</Link>
   );

@@ -2,10 +2,11 @@
   display: flex;
   justify-content: flex-start;
   align-items: center;
-  flex-flow: wrap;
-  gap: 5px;
+  gap: 8px 5px;
 
   position: relative;
+
+  overflow-x: scroll;
 }
 .outer-input_active {
   border-bottom-left-radius: 0;
@@ -65,4 +66,26 @@
 }
 .input::placeholder {
   color: var(--placeholderColor);
+}
+
+.outer-input_wide {
+  border-radius: 20px;
+  align-items: flex-start;
+  align-content: flex-start;
+  flex-wrap: wrap;
+
+  overflow-y: scroll;
+  overflow-x: hidden;
+
+  & .hashtag {
+    height: auto;
+  }
+
+  & .input {
+    align-self: auto;
+    flex: 1 0;
+  }
+}
+.outer-input_wide.outer-input_active {
+  border-bottom-left-radius: 20px;
 }

@@ -1,9 +1,9 @@
 .suggestion-list {
-  position: absolute;
+  position: fixed;
   top: 100%;
   left: -1px;
 
-  width: min(500px, 100%);
+  width: min(500px, calc(100% - 40px));
   min-height: 200px;
 
   background-color: var(--darkGrey);
@@ -18,9 +18,14 @@
   justify-content: flex-start;
   align-items: stretch;
 
-  overflow: hidden;
+  overflow-x: hidden;
+  overflow-y: scroll;
 
   z-index: 1000;
+
+  color: white;
+
+  max-height: 40vh;
 }
 
 .suggestion {

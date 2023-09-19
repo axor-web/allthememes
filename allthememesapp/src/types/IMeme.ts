@@ -1,5 +1,6 @@
 export default interface IMeme {
   _id?: string,
-  url?: string,
+  img?: string,
+  format?: string,
   hashtags?: (string|never)[]
 }

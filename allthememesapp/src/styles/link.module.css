@@ -1,0 +1,13 @@
+.link {
+  font-size: 20px;
+  font-weight: 200;
+  color: var(--darkPurple);
+  line-height: normal;
+  letter-spacing: 0.28px;
+  text-decoration: underline;
+  text-align: center;
+
+  background-color: transparent;
+
+  cursor: pointer;
+}

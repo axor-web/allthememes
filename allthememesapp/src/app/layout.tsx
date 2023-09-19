@@ -20,13 +20,13 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={manrope.className}>
-        <Header></Header>
+        <Header />
         <main>
           <StoreProvider>
             { children }
           </StoreProvider>
         </main>
-        <Footer></Footer>
+        <Footer />
       </body>
     </html>
   )

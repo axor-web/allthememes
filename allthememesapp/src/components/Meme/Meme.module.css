@@ -14,6 +14,8 @@
   position: relative;
 
   cursor: pointer;
+
+  max-width: 600px;
 }
 .meme-card:hover .meme-download {
   opacity: 1;
@@ -23,6 +25,33 @@
   opacity: 1;
   visibility: visible;
 }
+.meme-card_loading::after {
+  content: '';
+  display: block;
+
+  position: absolute;
+  top: 0;
+  left: 0;
+
+  height: 100%;
+  width: 25%;
+
+  background-color: rgba(0, 0, 0, .75);
+
+  filter: blur(100px);
+
+  animation: loading 1s linear infinite;
+}
+@keyframes loading {
+  from {
+    transform: translateX(-165%);
+    left: 0;
+  }
+  to {
+    transform: translateX(100%);
+    left: 100%;
+  }
+}
 
 .meme-image {
   width: 100%;
@@ -31,13 +60,18 @@
   display: flex;
   justify-content: center;
   align-items: center;
-}
-.meme-image img {
-  width: 100%;
-  height: 100%;
 
-  object-fit: cover;
+  position: relative;
+
+  overflow: hidden;
 }
+.meme-image .img {
+  object-fit: cover;
+  
+  min-width: 100%;
+  min-height: 100%;
+}
+
 .meme-image svg {
   width: 20%;
   height: auto;
@@ -70,6 +104,8 @@
 
 .meme-hashtags {
   position: absolute;
+  bottom: 0;
+  left: 0;
 
   width: 100%;
   height: auto;
@@ -89,17 +125,21 @@
   font-style: normal;
   font-weight: 300;
 
-  bottom: 0;
-
   opacity: 0;
   visibility: hidden;
 
   transition: opacity .2s, visibility .2s;
+
+  overflow-y: scroll;
 }
 .meme-hashtag {
   display: flex;
   justify-content: center;
   align-items: center;
+
+  color: var(--textColor);
+  font-size: 14px;
+  font-weight: 200;
 
   padding: 9px;
   height: 24px;

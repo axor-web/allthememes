@@ -20,7 +20,8 @@ class Database {
 }
 
 const memeSchema = new Schema({
-  url: { type: String, required: true },
+  img: { type: String, required: true },
+  format: { type: String },
   hashtags: { type: Array, required: true }
 }, { collection: 'uploadedmemes' });
 

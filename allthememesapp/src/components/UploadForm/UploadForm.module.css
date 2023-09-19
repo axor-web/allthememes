@@ -1,0 +1,39 @@
+.form {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: 1fr min-content;
+  grid-template-areas:
+  'upload hashtags'
+  'upload button';
+  gap: 20px;
+
+  max-height: 100%;
+
+  transition: opacity 0.3s, max-height 0.3s;
+}
+.form_uploading {
+  opacity: 0;
+  max-height: 0;
+}
+
+.upload {
+  grid-area: upload;
+}
+.hashtags {
+  grid-area: hashtags;
+}
+.button {
+  grid-area: button;
+}
+
+
+@media (max-width: 600px) {
+  .form {
+    grid-template-columns: 1fr;
+    grid-template-rows: 1fr 1fr min-content;
+    grid-template-areas: 
+    'upload'
+    'hashtags'
+    'button';
+  }
+}

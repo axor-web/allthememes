@@ -1,35 +1,93 @@
-import { Dispatch, FunctionComponent, MutableRefObject, SetStateAction, useEffect, useRef, useState } from "react";
+'use client';
+
+import { Dispatch, FunctionComponent, MutableRefObject, SetStateAction, useCallback, useEffect, useRef, useState } from "react";
 import { HashtagSuggestion } from "../HashtagSuggestion/HashtagSuggestion";
+import { WarningMessage } from "../WarningMessage/WarningMessage";
+import { createPortal } from "react-dom";
+import classNames from "classnames";
 import inputStyles from '../../styles/input.module.css';
 import styles from './HashtagInput.module.css';
-import { WarningMessage } from "../WarningMessage/WarningMessage";
+import { useDispatch, useSelector } from "react-redux";
+import { hashtagActions, selectIsHashtagsWarning, selectHashtagWarningMessage } from "@/redux/features/hashtags";
 
 interface Props {
-  hashtagsState: [Set<string|never>, Dispatch<SetStateAction<Set<string>>>],
-  allHashtags: (string|never)[],
+  addedHashtagsRef: MutableRefObject<Set<string | never>>,
+  allHashtags: (string | never)[],
   disabled?: boolean,
-  isAllowedNonExistingHashtags?: boolean
+  isAllowedNonExistingHashtags?: boolean,
+  size?: 'slim' | 'wide',
 }
 
-export const HashtagInput: FunctionComponent<Props> = ({ hashtagsState: [addedHashtags, setAddedHashtags], allHashtags, disabled = false, isAllowedNonExistingHashtags = false }) => {
-  const [rerender, setRerender] = useState(false);
-  const [isInputActive, setIsInputActive] = useState(false);
+export const HashtagInput: FunctionComponent<Props> = ({ addedHashtagsRef, allHashtags, disabled = false, isAllowedNonExistingHashtags = false, size = 'slim' }) => {
+  const [addedHashtags, setAddedHashtagsRaw] = useState(addedHashtagsRef.current);
+  const setAddedHashtags = useCallback((hashtags: Set<string | never>) => {
+    setAddedHashtagsRaw(hashtags);
+    addedHashtagsRef.current = hashtags;
+  }, [addedHashtagsRef]);
+  
+  const dispatch = useDispatch();
+
   const [inputValue, setInputValue] = useState('');
+  const [inputCoordinates, setInputCoordinates]: [DOMRect | undefined, Dispatch<SetStateAction<undefined | DOMRect>>] = useState();
+  
+  const isWarning = useSelector(selectIsHashtagsWarning);
+  const warningMessage = useSelector(selectHashtagWarningMessage);
+
+  allHashtags.sort();
+  allHashtags = allHashtags.filter((hashtag) => !addedHashtags.has(hashtag) && hashtag.indexOf(inputValue[0] === '#' ? inputValue.slice(1) : inputValue) === 0);
+
   const [currentLine, setCurrentLineRaw] = useState(0);
-  const [isInvalid, setIsInvalid] = useState(false);
-  const setCurrentLine = (lineNumber: number) => {
+
+  const setCurrentLine = useCallback((lineNumber: number) => {
     if (lineNumber < 0) { lineNumber = allHashtags.length - 1; }
     else if (lineNumber >= allHashtags.length) { lineNumber = 0; }
 
     setCurrentLineRaw(lineNumber);
-  };
+  }, [allHashtags.length]);
 
   const input: MutableRefObject<null | HTMLInputElement> = useRef(null);
+  const [isInputActive, setIsInputActiveRaw] = useState(false);
+  const setIsInputActive = (isActive: boolean) => {
+    setIsInputActiveRaw(isActive);
+    if (input.current) {
+      if (isActive) {
+        input.current.focus();
+      }
+      else {
+        input.current.blur();
+      }
+    }
+  }
+
+  const addHashtag = useCallback((hashtag: string) => {
+    addedHashtags.add(hashtag);
+
+    setAddedHashtags(new Set(addedHashtags));
+
+    if (input.current?.value) {
+      input.current.value = '';
+      setInputValue('');
+    }
+  }, [addedHashtags, setAddedHashtags]);
 
   useEffect(() => {
-    document.body.onscroll = () => setIsInputActive(false);
-    document.body.onclick = (event) => {
+    if (input.current) {
+      setInputCoordinates(input.current.getBoundingClientRect());
+    }
+  }, [inputValue, addedHashtags.size, allHashtags.length]);
+
+  useEffect(() => {
+    function scrollOrResizeHandler() {
+      setIsInputActive(false);
+      
+      if (input.current) {
+        setInputCoordinates(input.current.getBoundingClientRect());
+      }
+    }
+
+    function clickHandler(event: Event) {
       setCurrentLine(0);
+  
       if (event.target instanceof HTMLElement && event.target.className.includes('suggestion') && !event.target.className.includes('suggestion-list')) {
         if (isAllowedNonExistingHashtags && currentLine === 0) {
           addHashtag(event.target.innerText);
@@ -45,31 +103,33 @@ export const HashtagInput: FunctionComponent<Props> = ({ hashtagsState: [addedHa
         setIsInputActive(false);
       }
     }
-  });
 
-  allHashtags.sort();
-  allHashtags = allHashtags.filter((hashtag) => !addedHashtags.has(hashtag) && hashtag.includes(inputValue[0] === '#' ? inputValue.slice(1) : inputValue));
-  
-  function addHashtag(hashtag: string) {
-    addedHashtags.add(hashtag);
+    document.addEventListener('scroll', scrollOrResizeHandler);
+    window.addEventListener('resize', scrollOrResizeHandler);
+    document.addEventListener('click', clickHandler);
 
-    setAddedHashtags(addedHashtags);
-    setRerender(!rerender);
-
-    if (input.current?.value) {
-      input.current.value = '';
-      setInputValue('');
+    return () => {
+      document.removeEventListener('scroll', scrollOrResizeHandler);
+      window.removeEventListener('resize', scrollOrResizeHandler);
+      document.removeEventListener('click', clickHandler);
     }
-  }
+  }, [addHashtag, allHashtags, currentLine, isAllowedNonExistingHashtags, setCurrentLine])
 
   return (
-    <div className={
-      inputStyles.input 
-      + ' ' + styles['outer-input']
-      + (disabled ? ' ' + inputStyles['input_disabled'] + ' ' + styles['outer-input_disabled'] : '')
-      + (isInputActive ? ' ' + styles['outer-input_active'] : '')
-      + (isInvalid ? ' ' + inputStyles.input_invalid : '')
-    }>
+    <div className={classNames(
+      inputStyles.input,
+      styles['outer-input'],
+      disabled ? inputStyles['input_disabled'] + ' ' + styles['outer-input_disabled'] : '',
+      isInputActive ? styles['outer-input_active'] : '',
+      isWarning ? inputStyles.input_invalid : '',
+      size === 'wide' ? styles['outer-input_wide'] : ''
+    )}
+      onClick={(event) => {
+        if (event.target === event.currentTarget) {
+          input.current?.focus();
+        }
+      }}
+    >
       {[...addedHashtags].map((addedHashtag, index) => 
         <div key={index} className={styles.hashtag}>
           {'#' + addedHashtag}
@@ -78,8 +138,7 @@ export const HashtagInput: FunctionComponent<Props> = ({ hashtagsState: [addedHa
             onClick={(event) => {
               event.preventDefault();
               addedHashtags.delete(addedHashtag);
-              setAddedHashtags(addedHashtags);
-              setRerender(!rerender);
+              setAddedHashtags(new Set(addedHashtags));
             }}
           >
             <svg width="62" height="62" viewBox="0 0 62 62" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -95,14 +154,19 @@ export const HashtagInput: FunctionComponent<Props> = ({ hashtagsState: [addedHa
         type='text'
         className={styles.input}
         placeholder={'Start typing hashtag name...'}
-        onFocus={() => setIsInputActive(true)}
-        onBlur={() => setIsInvalid(false)}
+        onFocus={() => {
+          dispatch(hashtagActions.setIsWarning(false));
+          setIsInputActive(true);
+        }}
+        onBlur={() => {
+          dispatch(hashtagActions.setIsWarning(false));
+        }}
         onChange={(event) => {
           setInputValue(event.target.value);
         }}
         onKeyDown={(event) => {
           setCurrentLine(0);
-          setIsInvalid(false);
+          dispatch(hashtagActions.setIsWarning(false));
 
           if (event.code === 'Enter' || event.code === 'Tab') {
             event.preventDefault();
@@ -110,8 +174,8 @@ export const HashtagInput: FunctionComponent<Props> = ({ hashtagsState: [addedHa
             let string = event.currentTarget.value;
             if (string[0] === '#') { string = string.slice(1); }
 
-            if (isAllowedNonExistingHashtags && currentLine === 0) {
-              addHashtag(string)
+            if (isAllowedNonExistingHashtags && currentLine === 0 && string.length > 0) {
+              addHashtag(string);
             }
             else if (allHashtags.length && currentLine < allHashtags.length) {
               addHashtag(allHashtags[currentLine]);
@@ -141,28 +205,30 @@ export const HashtagInput: FunctionComponent<Props> = ({ hashtagsState: [addedHa
 
             const lowerCaseLetter = event.key.toLowerCase();
             event.currentTarget.value += lowerCaseLetter;
-
-            setInputValue(event.currentTarget.value);
           }
 
           else if (!(event.currentTarget.value.length === 0 && event.key === '#') && !/^[a-z0-9]+$/.test(event.key) && event.key.length === 1) {
             event.preventDefault();
-            setIsInvalid(true);
+            dispatch(hashtagActions.setIsWarning(true));
           }
         }}
       />
 
       { isInputActive &&
+        createPortal(
         <HashtagSuggestion
           isAllowedNonExistingHashtags={isAllowedNonExistingHashtags}
           inputValue={inputValue}
           hashtags={allHashtags}
           currentLine={[currentLine, setCurrentLineRaw]}
+          coordinates={inputCoordinates}
+          isStuckedToLeft={size === 'slim'}
         ></HashtagSuggestion>
+        , document.body)
       }
       
-      { isInputActive && isInvalid &&
-        <WarningMessage></WarningMessage> }
+      { (isInputActive || warningMessage) && isWarning &&
+        <WarningMessage message={warningMessage}></WarningMessage> }
     </div>
   );
 }

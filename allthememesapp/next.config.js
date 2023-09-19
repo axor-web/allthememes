@@ -1,21 +1,16 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   images: {
+    domains: ['localhost'],
     remotePatterns: [
       {
-        protocol: 'https',
-        hostname: 'i.imgflip.com',
-        port: '',
-        pathname: '/**'
-      },
-      {
-        protocol: 'https',
-        hostname: 'i.kym-cdn.com',
-        port: '',
-        pathname: '/**'
+        protocol: 'http',
+        hostname: 'localhost',
+        port: '3001',
+        pathname: '/image/**'
       }
     ],
   },
-}
+};
 
 module.exports = nextConfig;
