@@ -4,6 +4,7 @@ import { memeRouter } from './routes/meme.js';
 import { memesRouter } from './routes/memes.js';
 import { hashtagsRouter } from './routes/hashtags.js';
 import { imageRouter } from './routes/image.js';
+import { binaryImageRouter } from './routes/binaryimage.js';
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
 import compression from 'http-compression';
@@ -21,6 +22,7 @@ app.use('/meme', memeRouter);
 app.use('/memes', memesRouter);
 app.use('/hashtags', hashtagsRouter);
 app.use('/image', imageRouter);
+app.use('/binaryimage', binaryImageRouter);
 app.use((_, response) => {
   console.log('🟠 The requested resource was not found.');
   response.sendStatus(404);

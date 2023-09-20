@@ -10,6 +10,8 @@ import classNames from "classnames";
 import { getMeme } from "@/api/getMeme";
 import IMeme from "@/types/IMeme";
 import { notFound } from 'next/navigation'
+import { getBinaryImage } from "@/api/getBinaryImage";
+import IBinaryImage from "@/types/IBinaryImage";
 
 interface Props {
   memeId: string,
@@ -17,6 +19,7 @@ interface Props {
 
 export const MemePage: FunctionComponent<Props> = ({memeId = ''}) => {
   const [meme, setMeme]: [undefined | IMeme, Dispatch<SetStateAction<undefined | IMeme>>] = useState();
+  const [binaryImage, setBinaryImage]: [undefined | IBinaryImage, Dispatch<SetStateAction<undefined | IBinaryImage>>] = useState();
 
   const isFetch = useRef(false);
 
@@ -33,6 +36,16 @@ export const MemePage: FunctionComponent<Props> = ({memeId = ''}) => {
         .catch((error) => {
           console.error(error);
           setMeme({});
+        })
+        .then(() => {
+          return getBinaryImage(memeId);
+        })
+        .then((data) => {
+          data.image = btoa(data.image);
+          setBinaryImage(data);
+        })
+        .catch(() => {
+          setBinaryImage({});
         });
     }
   }, [memeId]);
@@ -61,7 +74,7 @@ export const MemePage: FunctionComponent<Props> = ({memeId = ''}) => {
           : <NoImageSvg></NoImageSvg> }
       </div>
 
-      {!!img && <Link href={'http://'+img} target="_blank" download={`meme.${format.split('/')[1]}`} className={styles['meme-download']}><DownloadSvg></DownloadSvg></Link>}
+      {!!img && <Link href={binaryImage?.image ? 'data:' + (binaryImage?.format ?? 'image/jpeg') + ';base64,' + binaryImage.image : 'http://' + img} target="_blank" download={`meme.${format.split('/')[1]}`} className={styles['meme-download']}><DownloadSvg></DownloadSvg></Link>}
     </div>
 
     <ul className={styles['meme-hashtags']}>
