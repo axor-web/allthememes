@@ -8,7 +8,7 @@
     "outDir": "dist",
     "allowSyntheticDefaultImports": true,
     "esModuleInterop": true,
-    "module": "ESNext",
+    "module": "NodeNext",
     "strict": true,
     "moduleResolution": "NodeNext",
     "forceConsistentCasingInFileNames": true,
