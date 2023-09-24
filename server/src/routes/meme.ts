@@ -3,7 +3,7 @@ import IMeme from "../types/IMeme.js";
 import { HashtagModel, MemeModel } from "../db.js";
 import { Document, Types } from "mongoose";
 
-async function attachMemeToHashtags(memeDocument: Document<unknown, {}, { hashtags: any[]; img: string; }> & { _id: Types.ObjectId; }, hashtags: string[]) {
+async function attachMemeToHashtags(memeDocument: Document<unknown, NonNullable<unknown>, { hashtags: string[]; img: string; }> & { _id: Types.ObjectId; }, hashtags: string[]) {
   await Promise.all(hashtags.map(async (hashtag: string) => {
     const hashtagDocument = await HashtagModel.findOne({ name: hashtag });
     

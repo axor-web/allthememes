@@ -47,7 +47,7 @@ router.get('/', async (request, response) => {
     const memesIdsFromHashtags = [...new Set(allHashtags.map((hashtag) => hashtag.memesIds).flat(2))];
 
     if (requiredHashtags?.length) {
-      for (let memeId of memesIdsFromHashtags) {
+      for (const memeId of memesIdsFromHashtags) {
         if (allHashtags.every((hashtag) => hashtag.memesIds.includes(memeId))) {
           memesIds.push(memeId.toString());
         }

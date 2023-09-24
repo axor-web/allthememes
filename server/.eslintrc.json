@@ -1,0 +1,22 @@
+{
+  "overrides": [
+    {
+      "files": ["**/*.ts"],
+      "parserOptions": {
+        "project": "**/tsconfig.json",
+        "tsconfigRootDir": "./server",
+        "sourceType": "module",
+        "ecmaVersion": "latest"
+      }
+    }
+  ],
+  "parserOptions": {
+    "sourceType": "module",
+    "ecmaVersion": "latest"
+  },
+  "parser": "@typescript-eslint/parser",
+  "plugins": ["@typescript-eslint"],
+  "extends": [
+    "plugin:@typescript-eslint/recommended"
+  ]
+}

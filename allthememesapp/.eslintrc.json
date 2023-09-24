@@ -1,3 +1,16 @@
 {
-  "extends": "next/core-web-vitals"
+  "extends": ["next/core-web-vitals", "prettier"],
+  "overrides": [
+    {
+      "files": ["**/*.ts", "**/*.tsx"],
+      "parserOptions": {
+        "project": "**/tsconfig.json",
+        "tsconfigRootDir": "./allthememesapp",
+        "sourceType": "module"
+      }
+    }
+  ],
+  "rules": {
+    "@next/next/no-html-link-for-pages": ["error", "./"]
+  }
 }
