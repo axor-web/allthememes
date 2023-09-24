@@ -1,8 +1,10 @@
 'use client'
 
-import { Dispatch, FunctionComponent, SetStateAction } from "react";
+import { FunctionComponent } from "react";
 import { Hint } from "../Hint/Hint";
 import styles from './SearchMode.module.css';
+import { useDispatch, useSelector } from "react-redux";
+import { hashtagActions, selectMode } from "@/redux/features/hashtags";
 
 interface Label {
   text: string,
@@ -11,14 +13,15 @@ interface Label {
 interface Props {
   leftLabel?: Label,
   rightLabel?: Label,
-  modeState: [boolean, Dispatch<SetStateAction<boolean>>]
 }
 
 export const SearchMode: FunctionComponent<Props> = ({
   leftLabel = { text: 'Hashtag Mode' },
   rightLabel = { text: 'AI Query Mode', hint: 'Enter a query for AI, which analyzes it and selects hashtags.'},
-  modeState: [mode, setMode]
 }) => {
+
+  const dispatch = useDispatch();
+  const mode = useSelector(selectMode);
 
   return (
     <div className={styles['search-mode']}>
@@ -29,7 +32,7 @@ export const SearchMode: FunctionComponent<Props> = ({
 
       <div 
         className={styles['switch']}
-        onClick={() => setMode(!mode)}
+        onClick={() => dispatch(hashtagActions.setMode(!mode))}
       >
         <div className={styles['switch-circle'] + (mode ? ' ' + styles['switch-circle_active'] : '')}></div>
       </div>

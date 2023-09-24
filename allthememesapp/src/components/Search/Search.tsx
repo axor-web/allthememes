@@ -7,16 +7,18 @@ import { FindButton } from "../FindButton/FindButton";
 import { HashtagInput } from "../HashtagInput/HashtagInput";
 import IHashtag from "@/types/IHashtag";
 import styles from './Search.module.css';
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { statusActions } from "@/redux/features/statusHeader";
-import { hashtagActions } from "@/redux/features/hashtags";
+import { hashtagActions, selectMode } from "@/redux/features/hashtags";
 
 export const Search: FunctionComponent = () => {
-  const [mode, setMode] = useState(false);
-  const addedHashtags = useRef(new Set() as Set<string | never>);
   const [allHashtags, setAllHashtags] = useState([] as (IHashtag | never)[]);
+  const addedHashtags = useRef(new Set() as Set<string | never>);
+  const prompt = useRef('');
 
   const dispatch = useDispatch();
+
+  const mode = useSelector(selectMode);
   
   useEffect(() => {
     dispatch(statusActions.setStatus(`Let's find your meme!`));
@@ -28,22 +30,28 @@ export const Search: FunctionComponent = () => {
   
   return (
     <section className={styles.search}>
-      <SearchMode modeState={[mode, setMode]}></SearchMode>
+      <SearchMode></SearchMode>
       <form className={styles['search-form']}>
-        <HashtagInput addedHashtagsRef={addedHashtags} allHashtags={allHashtags.map((hashtagObject) => hashtagObject.name)} disabled={mode}></HashtagInput>
-        <ChatGPTInput disabled={!mode}></ChatGPTInput>
+        <HashtagInput
+          addedHashtagsRef={addedHashtags}
+          allHashtags={allHashtags.map((hashtagObject) => hashtagObject.name)}
+          disabled={mode}
+        />
+        <ChatGPTInput
+          prompt={prompt}
+          disabled={!mode}
+        />
 
-        <FindButton onClickHandler={async () => {
-          dispatch(statusActions.setIsLoading(true));
+        <FindButton
+          onClickHandler={async () => {
+            dispatch(statusActions.setIsLoading(true));
 
-          if (mode) {
-            dispatch(statusActions.setStatus('Analyzing your query'));
-          }
-
-          dispatch(statusActions.setStatus('Finding memes'));
-          dispatch(hashtagActions.setHashtags([...addedHashtags.current]));
-          dispatch(hashtagActions.setIsSearch(true));
-        }}></FindButton>
+            dispatch(statusActions.setStatus('Finding memes'));
+            dispatch(hashtagActions.setPrompt(prompt.current));
+            dispatch(hashtagActions.setHashtags([...addedHashtags.current]));
+            dispatch(hashtagActions.setIsSearch(true));
+          }}
+        />
       </form>
     </section>
   );

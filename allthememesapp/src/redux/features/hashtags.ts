@@ -6,7 +6,9 @@ const hashtagsInitialState: IHashtagsState = {
   hashtags: [],
   isSearch: true,
   isFirstSearch: true,
-  isWarning: false
+  isWarning: false,
+  prompt: '',
+  mode: false
 };
 
 const hashtagsSlice = createSlice({
@@ -15,6 +17,9 @@ const hashtagsSlice = createSlice({
   reducers: {
     setHashtags: (state: IHashtagsState, { payload }: { payload: string[] }) => {
       state.hashtags = payload;
+    },
+    setPrompt: (state: IHashtagsState, { payload }: { payload: string }) => {
+      state.prompt = payload;
     },
     setIsSearch: (state: IHashtagsState, { payload }: { payload: boolean }) => {
       state.isSearch = payload;
@@ -30,6 +35,9 @@ const hashtagsSlice = createSlice({
     setWarningMessage: (state: IHashtagsState, { payload }: { payload: string }) => {
       state.warningMessage = payload;
     },
+    setMode: (state: IHashtagsState, { payload }: { payload: boolean }) => {
+      state.mode = payload;
+    },
 
     reset: () => hashtagsInitialState
   }
@@ -40,7 +48,9 @@ export const hashtagActions = hashtagsSlice.actions;
 
 export const selectHashtags = (state: RootState) => state.hashtags;
 export const selectHashtagsArray = (state: RootState) => selectHashtags(state).hashtags;
+export const selectPrompt = (state: RootState) => selectHashtags(state).prompt;
 export const selectIsSearch = (state: RootState) => selectHashtags(state).isSearch;
 export const selectIsFirstSearch = (state: RootState) => selectHashtags(state).isFirstSearch;
 export const selectIsHashtagsWarning = (state: RootState) => selectHashtags(state).isWarning;
 export const selectHashtagWarningMessage = (state: RootState) => selectHashtags(state).warningMessage;
+export const selectMode = (state: RootState) => selectHashtags(state).mode;

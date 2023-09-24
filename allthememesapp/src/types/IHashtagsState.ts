@@ -3,5 +3,7 @@ export default interface HashtagsState {
   isSearch: boolean,
   isFirstSearch: boolean,
   isWarning?: boolean,
-  warningMessage?: string
+  warningMessage?: string,
+  prompt?: string,
+  mode: boolean
 }

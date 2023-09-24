@@ -5,12 +5,15 @@ import styles from './MemesList.module.css';
 import { Meme } from "../Meme/Meme";
 import { getMemes } from "@/api/getMemes";
 import { useDispatch, useSelector } from "react-redux";
-import { hashtagActions, selectHashtagsArray, selectIsFirstSearch, selectIsSearch } from "@/redux/features/hashtags";
+import { hashtagActions, selectHashtagsArray, selectIsFirstSearch, selectIsSearch, selectMode, selectPrompt } from "@/redux/features/hashtags";
 import { selectIsLoading, statusActions } from "@/redux/features/statusHeader";
 import { IMemes } from "@/types/IMemes";
+import { getMemesByQuery } from "@/api/getMemesByQuery";
 
 export const MemesList: FunctionComponent = () => {
   const hashtags = useSelector(selectHashtagsArray);
+  const prompt = useSelector(selectPrompt) ?? '';
+  const mode = useSelector(selectMode);
   const isSearch = useSelector(selectIsSearch);
   const isFirstSearch = useSelector(selectIsFirstSearch);
   const isLoading = useSelector(selectIsLoading);
@@ -21,7 +24,7 @@ export const MemesList: FunctionComponent = () => {
 
   useEffect(() => {
     if (isSearch) {
-      getMemes(hashtags)
+      (mode ? getMemesByQuery(prompt) : getMemes(hashtags))
       .then((response) => {
         setMemes(response);
         
@@ -43,7 +46,7 @@ export const MemesList: FunctionComponent = () => {
         dispatch(hashtagActions.setIsSearch(false));
       });
     }
-  }, [isSearch, hashtags, dispatch, isFirstSearch]);
+  }, [isSearch, hashtags, dispatch, isFirstSearch, mode, prompt]);
 
   return (
     <section>
