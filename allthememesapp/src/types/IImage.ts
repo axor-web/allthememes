@@ -1,6 +1,6 @@
 export interface IImage {
-  image: string,
-  format: string,
-  isWarning?: boolean,
-  warningMessage?: string
+  image: string;
+  format: string;
+  isWarning?: boolean;
+  warningMessage?: string;
 }

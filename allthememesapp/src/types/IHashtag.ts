@@ -1,5 +1,5 @@
 export default interface IHashtag {
-  _id: string,
-  name: string,
-  memesIds: string[]
+  _id: string;
+  name: string;
+  memesIds: string[];
 }

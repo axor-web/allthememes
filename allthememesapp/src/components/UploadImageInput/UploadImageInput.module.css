@@ -39,7 +39,6 @@
   visibility: hidden;
 }
 
-
 .preview {
   width: 100%;
   height: 100%;
@@ -62,7 +61,7 @@
 .remove-button {
   border-radius: 50%;
   backdrop-filter: blur(20px);
-  background-color: rgba(8, 9, 13, .5);
+  background-color: rgba(8, 9, 13, 0.5);
 
   position: absolute;
 
@@ -74,13 +73,14 @@
   opacity: 0;
   visibility: hidden;
 
-  transition: opacity .2s, visibility .2s;
+  transition:
+    opacity 0.2s,
+    visibility 0.2s;
 }
 .remove-button svg {
   width: 62px;
   height: 62px;
 }
-
 
 @media (max-width: 600px) {
   .preview .remove-button {

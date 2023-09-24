@@ -3,13 +3,15 @@
   grid-template-columns: 1fr 1fr;
   grid-template-rows: 1fr min-content;
   grid-template-areas:
-  'upload hashtags'
-  'upload button';
+    'upload hashtags'
+    'upload button';
   gap: 20px;
 
   max-height: 100%;
 
-  transition: opacity 0.3s, max-height 0.3s;
+  transition:
+    opacity 0.3s,
+    max-height 0.3s;
 }
 .form_uploading {
   opacity: 0;
@@ -26,14 +28,13 @@
   grid-area: button;
 }
 
-
 @media (max-width: 600px) {
   .form {
     grid-template-columns: 1fr;
     grid-template-rows: 1fr 1fr min-content;
-    grid-template-areas: 
-    'upload'
-    'hashtags'
-    'button';
+    grid-template-areas:
+      'upload'
+      'hashtags'
+      'button';
   }
 }

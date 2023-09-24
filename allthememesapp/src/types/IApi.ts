@@ -1,3 +1,3 @@
 export interface IApi {
-  requestsCount: number
+  requestsCount: number;
 }

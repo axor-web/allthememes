@@ -1,13 +1,13 @@
 :root {
-  --purple: #A37BF4;
-  --darkPurple: #621DED;
-  --red: #FA004F;
-  --grey: #1B1E26;
-  --darkGrey: #13151B;
+  --purple: #a37bf4;
+  --darkPurple: #621ded;
+  --red: #fa004f;
+  --grey: #1b1e26;
+  --darkGrey: #13151b;
 
   --backgroundColor: #000000;
   --translucentBackgroundColor: rgba(8, 9, 13, 0.8);
-  --textColor: #FFFFFF;
+  --textColor: #ffffff;
   --placeholderColor: #474747;
 
   --inputTextSize: 17px;
@@ -18,7 +18,7 @@
 
   --backdropFilter: blur(10px);
 
-  --loadingColor: rgba(0, 0, 0, 0.60);
+  --loadingColor: rgba(0, 0, 0, 0.6);
   --loadingBlur: blur(50px);
 }
 

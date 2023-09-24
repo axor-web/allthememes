@@ -1,8 +1,8 @@
-import { createSlice } from "@reduxjs/toolkit";
-import { RootState } from "../store";
+import { createSlice } from '@reduxjs/toolkit';
+import { RootState } from '../store';
 
 const initialState = {
-  requestsCount: 0
+  requestsCount: 0,
 };
 
 const apiSlice = createSlice({
@@ -14,13 +14,16 @@ const apiSlice = createSlice({
     },
     decrementRequestCount: (state: typeof initialState) => {
       state.requestsCount--;
-      if (state.requestsCount < 0) { state.requestsCount = 0; }
+      if (state.requestsCount < 0) {
+        state.requestsCount = 0;
+      }
     },
-    resetRequestCount: () => initialState
-  }
+    resetRequestCount: () => initialState,
+  },
 });
 
 export const apiActions = apiSlice.actions;
 export const apiReducer = apiSlice.reducer;
 
-export const selectRequestsCount = (state: RootState) => state.api.requestsCount;
+export const selectRequestsCount = (state: RootState) =>
+  state.api.requestsCount;

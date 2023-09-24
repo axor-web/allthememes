@@ -4,8 +4,7 @@
 
   display: grid;
   grid-template-columns: minmax(300px, 800px) minmax(200px, 1fr);
-  grid-template-areas:
-  'image hashtags';
+  grid-template-areas: 'image hashtags';
   gap: 12px;
 }
 
@@ -45,7 +44,7 @@
   height: 100%;
   width: 25%;
 
-  background-color: rgba(0, 0, 0, .75);
+  background-color: rgba(0, 0, 0, 0.75);
 
   filter: blur(100px);
 
@@ -76,7 +75,7 @@
 }
 .meme-image .img {
   object-fit: cover;
-  
+
   min-width: 100%;
   min-height: 100%;
 }
@@ -92,7 +91,9 @@
   opacity: 0;
   visibility: hidden;
 
-  transition: opacity .2s, visibility .2s;
+  transition:
+    opacity 0.2s,
+    visibility 0.2s;
 
   display: flex;
   justify-content: center;
@@ -103,7 +104,7 @@
 
   border-radius: 50%;
 
-  background-color: rgba(8, 9, 13, 0.80);
+  background-color: rgba(8, 9, 13, 0.8);
   backdrop-filter: blur(4px);
 }
 .meme-download svg {
@@ -153,14 +154,13 @@
   background-color: var(--translucentBackgroundColor);
 }
 
-
 @media (max-width: 600px) {
-  .meme-page {  
+  .meme-page {
     grid-template-columns: 1fr;
     grid-template-rows: 1fr min-content;
     grid-template-areas:
-    'image'
-    'hashtags';
+      'image'
+      'hashtags';
   }
 
   .meme-card .meme-download {

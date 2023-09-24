@@ -1,25 +1,39 @@
 'use client';
 
-import { Dispatch, FunctionComponent, MutableRefObject, SetStateAction, useLayoutEffect, useRef, useState } from "react";
-import Image from "next/image";
-import { NoImageSvg } from "../NoImageSvg/NoImageSvg";
-import { DownloadSvg } from "../DownloadSvg/DownloadSvg";
+import {
+  Dispatch,
+  FunctionComponent,
+  MutableRefObject,
+  SetStateAction,
+  useLayoutEffect,
+  useRef,
+  useState,
+} from 'react';
+import Image from 'next/image';
+import { NoImageSvg } from '../NoImageSvg/NoImageSvg';
+import { DownloadSvg } from '../DownloadSvg/DownloadSvg';
 import styles from './MemePage.module.css';
-import Link from "next/link";
-import classNames from "classnames";
-import { getMeme } from "@/api/getMeme";
-import IMeme from "@/types/IMeme";
-import { notFound } from 'next/navigation'
-import { getBinaryImage } from "@/api/getBinaryImage";
-import IBinaryImage from "@/types/IBinaryImage";
+import Link from 'next/link';
+import classNames from 'classnames';
+import { getMeme } from '@/api/getMeme';
+import IMeme from '@/types/IMeme';
+import { notFound } from 'next/navigation';
+import { getBinaryImage } from '@/api/getBinaryImage';
+import IBinaryImage from '@/types/IBinaryImage';
 
 interface Props {
-  memeId: string,
+  memeId: string;
 }
 
-export const MemePage: FunctionComponent<Props> = ({memeId = ''}) => {
-  const [meme, setMeme]: [undefined | IMeme, Dispatch<SetStateAction<undefined | IMeme>>] = useState();
-  const [binaryImage, setBinaryImage]: [undefined | IBinaryImage, Dispatch<SetStateAction<undefined | IBinaryImage>>] = useState();
+export const MemePage: FunctionComponent<Props> = ({ memeId = '' }) => {
+  const [meme, setMeme]: [
+    undefined | IMeme,
+    Dispatch<SetStateAction<undefined | IMeme>>,
+  ] = useState();
+  const [binaryImage, setBinaryImage]: [
+    undefined | IBinaryImage,
+    Dispatch<SetStateAction<undefined | IBinaryImage>>,
+  ] = useState();
 
   const isFetch = useRef(false);
 
@@ -49,37 +63,67 @@ export const MemePage: FunctionComponent<Props> = ({memeId = ''}) => {
         });
     }
   }, [memeId]);
-  
+
   const isLoading = !meme;
 
-  let {img = '', format = '', hashtags = []} = isLoading ? {} : meme;
+  let { img = '', format = '', hashtags = [] } = isLoading ? {} : meme;
 
-  if (!isLoading && !('_id' in meme)) { return notFound(); }
+  if (!isLoading && !('_id' in meme)) {
+    return notFound();
+  }
 
   return (
     <div className={styles['meme-page']}>
-    <div className={classNames(styles['meme-card'], isLoading ? styles['meme-card_loading'] : '')} ref={memeCard}>
-      <div className={styles['meme-image']}>
-        {!!img
-          ? <Image
+      <div
+        className={classNames(
+          styles['meme-card'],
+          isLoading ? styles['meme-card_loading'] : '',
+        )}
+        ref={memeCard}
+      >
+        <div className={styles['meme-image']}>
+          {!!img ? (
+            <Image
               src={img}
               loader={() => 'http://' + img}
-              alt='Meme Image'
+              alt="Meme Image"
               fill={true}
               sizes={'100%'}
               priority={true}
-              style={{objectFit: 'cover'}}
+              style={{ objectFit: 'cover' }}
               className={styles.img}
             />
-          : <NoImageSvg></NoImageSvg> }
+          ) : (
+            <NoImageSvg></NoImageSvg>
+          )}
+        </div>
+
+        {!!img && (
+          <Link
+            href={
+              binaryImage?.image
+                ? 'data:' +
+                  (binaryImage?.format ?? 'image/jpeg') +
+                  ';base64,' +
+                  binaryImage.image
+                : 'http://' + img
+            }
+            target="_blank"
+            download={`meme.${format.split('/')[1]}`}
+            className={styles['meme-download']}
+          >
+            <DownloadSvg></DownloadSvg>
+          </Link>
+        )}
       </div>
 
-      {!!img && <Link href={binaryImage?.image ? 'data:' + (binaryImage?.format ?? 'image/jpeg') + ';base64,' + binaryImage.image : 'http://' + img} target="_blank" download={`meme.${format.split('/')[1]}`} className={styles['meme-download']}><DownloadSvg></DownloadSvg></Link>}
-    </div>
-
-    <ul className={styles['meme-hashtags']}>
-    { hashtags.map((hashtag, index) => (<li key={index} className={styles['meme-hashtag']}>{'#' + hashtag}</li>)) }
-    </ul>
+      <ul className={styles['meme-hashtags']}>
+        {hashtags.map((hashtag, index) => (
+          <li key={index} className={styles['meme-hashtag']}>
+            {'#' + hashtag}
+          </li>
+        ))}
+      </ul>
     </div>
   );
-}
+};

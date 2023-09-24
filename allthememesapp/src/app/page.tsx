@@ -14,8 +14,8 @@ export default function Home() {
     return () => {
       dispatch(hashtagActions.setIsFirstSearch(true));
       dispatch(hashtagActions.setIsSearch(true));
-    }
-  }, [dispatch])
+    };
+  }, [dispatch]);
 
   return (
     <>

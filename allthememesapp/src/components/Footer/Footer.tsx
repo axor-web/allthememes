@@ -1,6 +1,6 @@
-import { FunctionComponent } from "react";
-import { MainPageLink } from "../MainPageLink/MainPageLink";
-import { UploadNavButton } from "../UploadNavButton/UploadNavButton";
+import { FunctionComponent } from 'react';
+import { MainPageLink } from '../MainPageLink/MainPageLink';
+import { UploadNavButton } from '../UploadNavButton/UploadNavButton';
 import styles from './Footer.module.css';
 
 export const Footer: FunctionComponent = () => {
@@ -10,4 +10,4 @@ export const Footer: FunctionComponent = () => {
       <UploadNavButton></UploadNavButton>
     </footer>
   );
-}
+};

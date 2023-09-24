@@ -19,24 +19,29 @@
   opacity: 1;
   visibility: visible;
 
-  transition: opacity .3s, visibility .3s;
+  transition:
+    opacity 0.3s,
+    visibility 0.3s;
   transition-timing-function: linear;
 }
 .input::placeholder {
   color: var(--placeholderColor);
 }
-.input_disabled, .input:disabled {
+.input_disabled,
+.input:disabled {
   opacity: 0;
   visibility: hidden;
   position: absolute;
   width: calc(100% - 144px);
 }
-.input_invalid, .input:invalid {
+.input_invalid,
+.input:invalid {
   border: 1px solid var(--red);
 }
 
 @media (max-width: 600px) {
-  .input_disabled, .input:disabled {
+  .input_disabled,
+  .input:disabled {
     width: 100%;
   }
 }

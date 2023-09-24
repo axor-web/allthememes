@@ -36,7 +36,7 @@
   height: 100%;
   width: 25%;
 
-  background-color: rgba(0, 0, 0, .75);
+  background-color: rgba(0, 0, 0, 0.75);
 
   filter: blur(100px);
 
@@ -67,7 +67,7 @@
 }
 .meme-image .img {
   object-fit: cover;
-  
+
   min-width: 100%;
   min-height: 100%;
 }
@@ -83,7 +83,9 @@
   opacity: 0;
   visibility: hidden;
 
-  transition: opacity .2s, visibility .2s;
+  transition:
+    opacity 0.2s,
+    visibility 0.2s;
 
   display: flex;
   justify-content: center;
@@ -94,7 +96,7 @@
 
   border-radius: 50%;
 
-  background-color: rgba(8, 9, 13, 0.80);
+  background-color: rgba(8, 9, 13, 0.8);
   backdrop-filter: blur(4px);
 }
 .meme-download svg {
@@ -128,7 +130,9 @@
   opacity: 0;
   visibility: hidden;
 
-  transition: opacity .2s, visibility .2s;
+  transition:
+    opacity 0.2s,
+    visibility 0.2s;
 
   overflow-y: scroll;
 }

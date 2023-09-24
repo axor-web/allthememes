@@ -1,4 +1,4 @@
-import { configureStore } from '@reduxjs/toolkit'
+import { configureStore } from '@reduxjs/toolkit';
 import { statusReducer } from './features/statusHeader';
 import { hashtagsReducer } from './features/hashtags';
 import { imageReducer } from './features/image';
@@ -9,9 +9,9 @@ export const store = configureStore({
     status: statusReducer,
     hashtags: hashtagsReducer,
     image: imageReducer,
-    api: apiReducer
-  }
-})
+    api: apiReducer,
+  },
+});
 
 export type RootState = ReturnType<typeof store.getState>;
 export type AppDispatch = typeof store.dispatch;
