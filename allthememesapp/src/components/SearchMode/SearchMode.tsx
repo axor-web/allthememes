@@ -17,7 +17,7 @@ interface Props {
 
 export const SearchMode: FunctionComponent<Props> = ({
   leftLabel = { text: 'Hashtag Mode' },
-  rightLabel = { text: 'AI Query Mode', hint: 'Enter a query for AI, which analyzes it and selects hashtags.'},
+  rightLabel = { text: 'AI Prompt Mode', hint: 'Enter a prompt for AI, which analyzes it and selects hashtags.'},
 }) => {
 
   const dispatch = useDispatch();
