@@ -1,23 +1,31 @@
-import { Router } from "express";
-import IMeme from "../types/IMeme.js";
-import { HashtagModel, MemeModel } from "../db.js";
-import { Document, Types } from "mongoose";
+import { Router } from 'express';
+import IMeme from '../types/IMeme.js';
+import { HashtagModel, MemeModel } from '../db.js';
+import { Document, Types } from 'mongoose';
 
-async function attachMemeToHashtags(memeDocument: Document<unknown, NonNullable<unknown>, { hashtags: string[]; img: string; }> & { _id: Types.ObjectId; }, hashtags: string[]) {
-  await Promise.all(hashtags.map(async (hashtag: string) => {
-    const hashtagDocument = await HashtagModel.findOne({ name: hashtag });
-    
-    if (hashtagDocument) { 
-      hashtagDocument.memesIds.push(memeDocument._id);
-      await hashtagDocument.save();
-    }
-    else {
-      await new HashtagModel({
-        name: hashtag,
-        memesIds: [ memeDocument._id ]
-      }).save();
-    }
-  }));
+async function attachMemeToHashtags(
+  memeDocument: Document<
+    unknown,
+    NonNullable<unknown>,
+    { hashtags: string[]; img: string }
+  > & { _id: Types.ObjectId },
+  hashtags: string[],
+) {
+  await Promise.all(
+    hashtags.map(async (hashtag: string) => {
+      const hashtagDocument = await HashtagModel.findOne({ name: hashtag });
+
+      if (hashtagDocument) {
+        hashtagDocument.memesIds.push(memeDocument._id);
+        await hashtagDocument.save();
+      } else {
+        await new HashtagModel({
+          name: hashtag,
+          memesIds: [memeDocument._id],
+        }).save();
+      }
+    }),
+  );
 }
 
 const router = Router();
@@ -40,11 +48,12 @@ router.get('/', async (request, response) => {
       return;
     }
 
-    meme.img = `localhost:${3001}/image/${meme._id.toString()}.${meme.format ? meme.format.split('/')[1] : ''}`;
+    meme.img = `localhost:${3001}/image/${meme._id.toString()}.${
+      meme.format ? meme.format.split('/')[1] : ''
+    }`;
 
     response.status(200).json(meme);
-  }
-  catch (error) {
+  } catch (error) {
     console.log('There is an error!' + '\n' + error);
     response.sendStatus(500);
   }
@@ -57,7 +66,7 @@ router.post('/', async (request, response) => {
     response.sendStatus(400);
     return;
   }
-  
+
   try {
     const extension = format.split('/')[1];
 
@@ -65,18 +74,16 @@ router.post('/', async (request, response) => {
       hashtags.push(extension);
     }
 
-    const meme = new MemeModel({img, hashtags, format});
+    const meme = new MemeModel({ img, hashtags, format });
 
     const memeDocument = await meme.save();
     await attachMemeToHashtags(memeDocument, hashtags);
 
     response.sendStatus(200);
-  }
-  catch (error) {
+  } catch (error) {
     console.log('There is an error!' + '\n' + error);
     response.sendStatus(500);
   }
 });
-
 
 export const memeRouter = router;

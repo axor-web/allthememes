@@ -6,7 +6,10 @@
   "scripts": {
     "start": "tsc && node --watch ./dist/router.js",
     "build": "tsc",
-    "lint": "npx eslint ."
+    "lint": "npx eslint .",
+    "format": "prettier --check .",
+    "format:fix": "prettier --write .",
+    "precommit": "npm run lint && npm run format:fix"
   },
   "author": "Alexey Koval",
   "license": "ISC",

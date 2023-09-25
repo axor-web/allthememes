@@ -7,8 +7,9 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "format": "prettier --check --ignore-path .gitignore .",
-    "format:fix": "prettier --write --ignore-path .gitignore ."
+    "format": "prettier --check .",
+    "format:fix": "prettier --write .",
+    "precommit": "npm run lint && npm run format:fix"
   },
   "dependencies": {
     "@reduxjs/toolkit": "^1.9.5",

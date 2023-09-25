@@ -23,9 +23,11 @@ router.get('/:img', async (request, response) => {
       return;
     }
 
-    response.send({image: meme.img, format: meme.format ?? 'image/' + format ?? 'image/jpeg'})
-  }
-  catch (error) {
+    response.send({
+      image: meme.img,
+      format: meme.format ?? 'image/' + format ?? 'image/jpeg',
+    });
+  } catch (error) {
     console.log('There is an error!' + '\n' + error);
     response.sendStatus(500);
   }

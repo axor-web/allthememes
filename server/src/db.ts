@@ -1,4 +1,4 @@
-import { connect, model, Schema } from "mongoose";
+import { connect, model, Schema } from 'mongoose';
 
 const server = 'localhost:27017';
 const database = 'memes';
@@ -9,7 +9,7 @@ class Database {
   }
 
   #connect() {
-      connect(`mongodb://${server}/${database}`)
+    connect(`mongodb://${server}/${database}`)
       .then(() => {
         console.log('🟢 Database connection successful');
       })
@@ -19,16 +19,22 @@ class Database {
   }
 }
 
-const memeSchema = new Schema({
-  img: { type: String, required: true },
-  format: { type: String },
-  hashtags: { type: Array, required: true }
-}, { collection: 'uploadedmemes' });
+const memeSchema = new Schema(
+  {
+    img: { type: String, required: true },
+    format: { type: String },
+    hashtags: { type: Array, required: true },
+  },
+  { collection: 'uploadedmemes' },
+);
 
-const hashtagSchema = new Schema({
-  name: { type: String, required: true },
-  memesIds: { type: Array, required: true }
-}, { collection: 'hashtags' })
+const hashtagSchema = new Schema(
+  {
+    name: { type: String, required: true },
+    memesIds: { type: Array, required: true },
+  },
+  { collection: 'hashtags' },
+);
 
 export const db = new Database();
 export const MemeModel = model('Meme', memeSchema);

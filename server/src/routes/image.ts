@@ -23,13 +23,15 @@ router.get('/:img', async (request, response) => {
       return;
     }
 
-    response.setHeader('Content-Type', meme.format ?? 'image/' + format ?? 'image/jpeg');
+    response.setHeader(
+      'Content-Type',
+      meme.format ?? 'image/' + format ?? 'image/jpeg',
+    );
 
     const imageBuffer = Buffer.from(meme.img, 'binary');
 
     response.send(imageBuffer);
-  }
-  catch (error) {
+  } catch (error) {
     console.log('There is an error!' + '\n' + error);
     response.sendStatus(500);
   }
