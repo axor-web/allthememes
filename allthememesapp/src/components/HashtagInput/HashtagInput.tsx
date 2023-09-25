@@ -68,6 +68,15 @@ export const HashtagInput: FunctionComponent<Props> = ({
   );
 
   const [inputValue, setInputValue] = useState('');
+  allHashtags.sort();
+  allHashtags = allHashtags.filter(
+    (hashtag) =>
+      !addedHashtags.has(hashtag) &&
+      hashtag.indexOf(
+        inputValue[0] === '#' ? inputValue.slice(1) : inputValue,
+      ) === 0,
+  );
+
   const [inputCoordinates, setInputCoordinatesRaw]: [
     DOMRect | undefined,
     Dispatch<DOMRect | undefined>,
@@ -214,15 +223,6 @@ export const HashtagInput: FunctionComponent<Props> = ({
     setCurrentLine,
     setInputCoordinates,
   ]);
-
-  allHashtags.sort();
-  allHashtags = allHashtags.filter(
-    (hashtag) =>
-      !addedHashtags.has(hashtag) &&
-      hashtag.indexOf(
-        inputValue[0] === '#' ? inputValue.slice(1) : inputValue,
-      ) === 0,
-  );
 
   return (
     <div
