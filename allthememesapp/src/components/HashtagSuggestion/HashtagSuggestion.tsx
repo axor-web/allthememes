@@ -4,7 +4,7 @@ import {
   MutableRefObject,
   SetStateAction,
   useEffect,
-  useRef
+  useRef,
 } from 'react';
 import styles from './HashtagSuggestion.module.css';
 

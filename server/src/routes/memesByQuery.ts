@@ -29,7 +29,7 @@ router.get('/', async (request, response) => {
     let requiredHashtags: string[] = [];
 
     if (query?.length) {
-    const prompt = `The user wrote a request about the meme he wants to find. Convert his request into a list of one-word hashtags (without "#") on english separated by single space (" "). No need to write any explanations, just write a list of hashtags.
+      const prompt = `The user wrote a request about the meme he wants to find. Convert his request into a list of one-word hashtags (without "#") on english separated by single space (" "). No need to write any explanations, just write a list of hashtags.
 User Request: "${query}".
 All hashtags must be a singular noun.`;
 
@@ -40,7 +40,7 @@ All hashtags must be a singular noun.`;
       console.log(completion.choices[0].message.content);
       requiredHashtags =
         completion.choices[0].message.content?.split(/,\s*|\s+/) ?? [];
-      
+
       allHashtags = allHashtags.filter((hashtag) => {
         return requiredHashtags.includes(hashtag.name);
       });

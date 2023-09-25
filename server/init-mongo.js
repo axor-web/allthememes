@@ -1,15 +1,13 @@
-db.createUser(
-  {
-      user: "admin",
-      pwd: "admin",
-      roles: [
-          {
-              role: "readWrite",
-              db: "memes"
-          }
-      ]
-  }
-);
+db.createUser({
+  user: 'admin',
+  pwd: 'admin',
+  roles: [
+    {
+      role: 'readWrite',
+      db: 'memes',
+    },
+  ],
+});
 
-db.createCollection("hashtags");
-db.createCollection("uploadedMemes");
+db.createCollection('hashtags');
+db.createCollection('uploadedMemes');

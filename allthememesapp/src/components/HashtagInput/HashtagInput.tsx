@@ -38,7 +38,6 @@ export const HashtagInput: FunctionComponent<Props> = ({
   isAllowedNonExistingHashtags = false,
   size = 'slim',
 }) => {
-
   const dispatch = useDispatch();
 
   const isWarning = useSelector(selectIsHashtagsWarning);
@@ -69,7 +68,10 @@ export const HashtagInput: FunctionComponent<Props> = ({
   );
 
   const [inputValue, setInputValue] = useState('');
-  const [inputCoordinates, setInputCoordinatesRaw]: [DOMRect | undefined, Dispatch<DOMRect | undefined>] = useState();
+  const [inputCoordinates, setInputCoordinatesRaw]: [
+    DOMRect | undefined,
+    Dispatch<DOMRect | undefined>,
+  ] = useState();
   const [isInputActive, setIsInputActiveRaw] = useState(false);
   const setIsInputActive = (isActive: boolean) => {
     setIsInputActiveRaw(isActive);
@@ -103,57 +105,66 @@ export const HashtagInput: FunctionComponent<Props> = ({
     }
   }, []);
 
-  const keyDownHandler: KeyboardEventHandler<HTMLInputElement> = useCallback((event) => {
-    setCurrentLine(0);
-    dispatch(hashtagActions.setIsWarning(false));
+  const keyDownHandler: KeyboardEventHandler<HTMLInputElement> = useCallback(
+    (event) => {
+      setCurrentLine(0);
+      dispatch(hashtagActions.setIsWarning(false));
 
-    if (event.code === 'Enter' || event.code === 'Tab') {
-      event.preventDefault();
+      if (event.code === 'Enter' || event.code === 'Tab') {
+        event.preventDefault();
 
-      let string = event.currentTarget.value;
-      if (string[0] === '#') {
-        string = string.slice(1);
-      }
+        let string = event.currentTarget.value;
+        if (string[0] === '#') {
+          string = string.slice(1);
+        }
 
-      if (
-        isAllowedNonExistingHashtags &&
-        currentLine === 0 &&
-        string.length > 0
+        if (
+          isAllowedNonExistingHashtags &&
+          currentLine === 0 &&
+          string.length > 0
+        ) {
+          addHashtag(string);
+        } else if (allHashtags.length && currentLine < allHashtags.length) {
+          addHashtag(allHashtags[currentLine]);
+        }
+      } else if (event.code === 'Backspace') {
+        if (addedHashtags.size && !event.currentTarget.value) {
+          const addedHashtagsCopy = [...addedHashtags];
+          addedHashtagsCopy.pop();
+
+          setAddedHashtags(new Set(addedHashtagsCopy));
+        }
+      } else if (event.code === 'ArrowUp' || event.code === 'ArrowLeft') {
+        event.preventDefault();
+        setCurrentLine(currentLine - 1);
+      } else if (event.code === 'ArrowDown' || event.code === 'ArrowRight') {
+        event.preventDefault();
+        setCurrentLine(currentLine + 1);
+      } else if (/[A-Z]/.test(event.key) && event.key.length === 1) {
+        event.preventDefault();
+
+        const lowerCaseLetter = event.key.toLowerCase();
+        event.currentTarget.value += lowerCaseLetter;
+      } else if (
+        !(event.currentTarget.value.length === 0 && event.key === '#') &&
+        !/^[a-z0-9]+$/.test(event.key) &&
+        event.key.length === 1
       ) {
-        addHashtag(string);
-      } else if (allHashtags.length && currentLine < allHashtags.length) {
-        addHashtag(allHashtags[currentLine]);
+        event.preventDefault();
+        dispatch(hashtagActions.setIsWarning(true));
       }
-    } else if (event.code === 'Backspace') {
-      if (addedHashtags.size && !event.currentTarget.value) {
-        const addedHashtagsCopy = [...addedHashtags];
-        addedHashtagsCopy.pop();
-
-        setAddedHashtags(new Set(addedHashtagsCopy));
-      }
-    } else if (event.code === 'ArrowUp' || event.code === 'ArrowLeft') {
-      event.preventDefault();
-      setCurrentLine(currentLine - 1);
-    } else if (
-      event.code === 'ArrowDown' ||
-      event.code === 'ArrowRight'
-    ) {
-      event.preventDefault();
-      setCurrentLine(currentLine + 1);
-    } else if (/[A-Z]/.test(event.key) && event.key.length === 1) {
-      event.preventDefault();
-
-      const lowerCaseLetter = event.key.toLowerCase();
-      event.currentTarget.value += lowerCaseLetter;
-    } else if (
-      !(event.currentTarget.value.length === 0 && event.key === '#') &&
-      !/^[a-z0-9]+$/.test(event.key) &&
-      event.key.length === 1
-    ) {
-      event.preventDefault();
-      dispatch(hashtagActions.setIsWarning(true));
-    }
-  }, [addHashtag, addedHashtags, allHashtags, currentLine, dispatch, isAllowedNonExistingHashtags, setAddedHashtags, setCurrentLine]);
+    },
+    [
+      addHashtag,
+      addedHashtags,
+      allHashtags,
+      currentLine,
+      dispatch,
+      isAllowedNonExistingHashtags,
+      setAddedHashtags,
+      setCurrentLine,
+    ],
+  );
 
   useEffect(() => {
     setInputCoordinates();
@@ -201,7 +212,7 @@ export const HashtagInput: FunctionComponent<Props> = ({
     currentLine,
     isAllowedNonExistingHashtags,
     setCurrentLine,
-    setInputCoordinates
+    setInputCoordinates,
   ]);
 
   allHashtags.sort();
@@ -303,14 +314,15 @@ export const HashtagInput: FunctionComponent<Props> = ({
           document.body,
         )}
 
-      {(isInputActive || !!warningMessage) && isWarning && 
+      {(isInputActive || !!warningMessage) &&
+        isWarning &&
         createPortal(
-        <WarningMessage
-          message={warningMessage}
-          coordinates={inputCoordinates}
-        />,
-        document.body
-      )}
+          <WarningMessage
+            message={warningMessage}
+            coordinates={inputCoordinates}
+          />,
+          document.body,
+        )}
     </div>
   );
 };
