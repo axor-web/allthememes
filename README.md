@@ -33,7 +33,9 @@ Technologies...
 5. Open project at <a href="http://localhost:3000/" target="_blank">localhost:3000</a> in your browser
 6. Try it!
 
-* EXTRA: If you want to use AI Prompt mode, you must insert your OpenAI API key in server/.env:
+### EXTRA
+
+If you want to use AI Prompt mode, you must insert your OpenAI API key in server/.env:
 
 ```env
 MONGO_INITDB_ROOT_USERNAME = admin
