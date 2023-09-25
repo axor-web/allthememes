@@ -3,8 +3,8 @@
 import {
   Dispatch,
   FunctionComponent,
+  KeyboardEventHandler,
   MutableRefObject,
-  SetStateAction,
   useCallback,
   useEffect,
   useRef,
@@ -38,6 +38,12 @@ export const HashtagInput: FunctionComponent<Props> = ({
   isAllowedNonExistingHashtags = false,
   size = 'slim',
 }) => {
+
+  const dispatch = useDispatch();
+
+  const isWarning = useSelector(selectIsHashtagsWarning);
+  const warningMessage = useSelector(selectHashtagWarningMessage);
+
   const [addedHashtags, setAddedHashtagsRaw] = useState(
     addedHashtagsRef.current,
   );
@@ -48,55 +54,6 @@ export const HashtagInput: FunctionComponent<Props> = ({
     },
     [addedHashtagsRef],
   );
-
-  const dispatch = useDispatch();
-
-  const [inputValue, setInputValue] = useState('');
-  const [inputCoordinates, setInputCoordinates]: [
-    DOMRect | undefined,
-    Dispatch<SetStateAction<undefined | DOMRect>>,
-  ] = useState();
-
-  const isWarning = useSelector(selectIsHashtagsWarning);
-  const warningMessage = useSelector(selectHashtagWarningMessage);
-
-  allHashtags.sort();
-  allHashtags = allHashtags.filter(
-    (hashtag) =>
-      !addedHashtags.has(hashtag) &&
-      hashtag.indexOf(
-        inputValue[0] === '#' ? inputValue.slice(1) : inputValue,
-      ) === 0,
-  );
-
-  const [currentLine, setCurrentLineRaw] = useState(0);
-
-  const setCurrentLine = useCallback(
-    (lineNumber: number) => {
-      if (lineNumber < 0) {
-        lineNumber = allHashtags.length - 1;
-      } else if (lineNumber >= allHashtags.length) {
-        lineNumber = 0;
-      }
-
-      setCurrentLineRaw(lineNumber);
-    },
-    [allHashtags.length],
-  );
-
-  const input: MutableRefObject<null | HTMLInputElement> = useRef(null);
-  const [isInputActive, setIsInputActiveRaw] = useState(false);
-  const setIsInputActive = (isActive: boolean) => {
-    setIsInputActiveRaw(isActive);
-    if (input.current) {
-      if (isActive) {
-        input.current.focus();
-      } else {
-        input.current.blur();
-      }
-    }
-  };
-
   const addHashtag = useCallback(
     (hashtag: string) => {
       addedHashtags.add(hashtag);
@@ -111,19 +68,102 @@ export const HashtagInput: FunctionComponent<Props> = ({
     [addedHashtags, setAddedHashtags],
   );
 
-  useEffect(() => {
+  const [inputValue, setInputValue] = useState('');
+  const [inputCoordinates, setInputCoordinatesRaw]: [DOMRect | undefined, Dispatch<DOMRect | undefined>] = useState();
+  const [isInputActive, setIsInputActiveRaw] = useState(false);
+  const setIsInputActive = (isActive: boolean) => {
+    setIsInputActiveRaw(isActive);
     if (input.current) {
-      setInputCoordinates(input.current.getBoundingClientRect());
+      if (isActive) {
+        input.current.focus();
+      } else {
+        input.current.blur();
+      }
     }
-  }, [inputValue, addedHashtags.size, allHashtags.length]);
+  };
+  const input: MutableRefObject<null | HTMLInputElement> = useRef(null);
+
+  const [currentLine, setCurrentLineRaw] = useState(0);
+  const setCurrentLine = useCallback(
+    (lineNumber: number) => {
+      if (lineNumber < 0) {
+        lineNumber = allHashtags.length - 1;
+      } else if (lineNumber >= allHashtags.length) {
+        lineNumber = 0;
+      }
+
+      setCurrentLineRaw(lineNumber);
+    },
+    [allHashtags.length],
+  );
+
+  const setInputCoordinates = useCallback(() => {
+    if (input.current) {
+      setInputCoordinatesRaw(input.current.getBoundingClientRect());
+    }
+  }, []);
+
+  const keyDownHandler: KeyboardEventHandler<HTMLInputElement> = useCallback((event) => {
+    setCurrentLine(0);
+    dispatch(hashtagActions.setIsWarning(false));
+
+    if (event.code === 'Enter' || event.code === 'Tab') {
+      event.preventDefault();
+
+      let string = event.currentTarget.value;
+      if (string[0] === '#') {
+        string = string.slice(1);
+      }
+
+      if (
+        isAllowedNonExistingHashtags &&
+        currentLine === 0 &&
+        string.length > 0
+      ) {
+        addHashtag(string);
+      } else if (allHashtags.length && currentLine < allHashtags.length) {
+        addHashtag(allHashtags[currentLine]);
+      }
+    } else if (event.code === 'Backspace') {
+      if (addedHashtags.size && !event.currentTarget.value) {
+        const addedHashtagsCopy = [...addedHashtags];
+        addedHashtagsCopy.pop();
+
+        setAddedHashtags(new Set(addedHashtagsCopy));
+      }
+    } else if (event.code === 'ArrowUp' || event.code === 'ArrowLeft') {
+      event.preventDefault();
+      setCurrentLine(currentLine - 1);
+    } else if (
+      event.code === 'ArrowDown' ||
+      event.code === 'ArrowRight'
+    ) {
+      event.preventDefault();
+      setCurrentLine(currentLine + 1);
+    } else if (/[A-Z]/.test(event.key) && event.key.length === 1) {
+      event.preventDefault();
+
+      const lowerCaseLetter = event.key.toLowerCase();
+      event.currentTarget.value += lowerCaseLetter;
+    } else if (
+      !(event.currentTarget.value.length === 0 && event.key === '#') &&
+      !/^[a-z0-9]+$/.test(event.key) &&
+      event.key.length === 1
+    ) {
+      event.preventDefault();
+      dispatch(hashtagActions.setIsWarning(true));
+    }
+  }, [addHashtag, addedHashtags, allHashtags, currentLine, dispatch, isAllowedNonExistingHashtags, setAddedHashtags, setCurrentLine]);
+
+  useEffect(() => {
+    setInputCoordinates();
+  }, [inputValue, addedHashtags.size, allHashtags.length, setInputCoordinates]);
 
   useEffect(() => {
     function scrollOrResizeHandler() {
       setIsInputActive(false);
 
-      if (input.current) {
-        setInputCoordinates(input.current.getBoundingClientRect());
-      }
+      setInputCoordinates();
     }
 
     function clickHandler(event: Event) {
@@ -161,7 +201,17 @@ export const HashtagInput: FunctionComponent<Props> = ({
     currentLine,
     isAllowedNonExistingHashtags,
     setCurrentLine,
+    setInputCoordinates
   ]);
+
+  allHashtags.sort();
+  allHashtags = allHashtags.filter(
+    (hashtag) =>
+      !addedHashtags.has(hashtag) &&
+      hashtag.indexOf(
+        inputValue[0] === '#' ? inputValue.slice(1) : inputValue,
+      ) === 0,
+  );
 
   return (
     <div
@@ -237,57 +287,7 @@ export const HashtagInput: FunctionComponent<Props> = ({
         onChange={(event) => {
           setInputValue(event.target.value);
         }}
-        onKeyDown={(event) => {
-          setCurrentLine(0);
-          dispatch(hashtagActions.setIsWarning(false));
-
-          if (event.code === 'Enter' || event.code === 'Tab') {
-            event.preventDefault();
-
-            let string = event.currentTarget.value;
-            if (string[0] === '#') {
-              string = string.slice(1);
-            }
-
-            if (
-              isAllowedNonExistingHashtags &&
-              currentLine === 0 &&
-              string.length > 0
-            ) {
-              addHashtag(string);
-            } else if (allHashtags.length && currentLine < allHashtags.length) {
-              addHashtag(allHashtags[currentLine]);
-            }
-          } else if (event.code === 'Backspace') {
-            if (addedHashtags.size && !event.currentTarget.value) {
-              const addedHashtagsCopy = [...addedHashtags];
-              addedHashtagsCopy.pop();
-
-              setAddedHashtags(new Set(addedHashtagsCopy));
-            }
-          } else if (event.code === 'ArrowUp' || event.code === 'ArrowLeft') {
-            event.preventDefault();
-            setCurrentLine(currentLine - 1);
-          } else if (
-            event.code === 'ArrowDown' ||
-            event.code === 'ArrowRight'
-          ) {
-            event.preventDefault();
-            setCurrentLine(currentLine + 1);
-          } else if (/[A-Z]/.test(event.key) && event.key.length === 1) {
-            event.preventDefault();
-
-            const lowerCaseLetter = event.key.toLowerCase();
-            event.currentTarget.value += lowerCaseLetter;
-          } else if (
-            !(event.currentTarget.value.length === 0 && event.key === '#') &&
-            !/^[a-z0-9]+$/.test(event.key) &&
-            event.key.length === 1
-          ) {
-            event.preventDefault();
-            dispatch(hashtagActions.setIsWarning(true));
-          }
-        }}
+        onKeyDown={keyDownHandler}
       />
 
       {isInputActive &&
@@ -299,12 +299,17 @@ export const HashtagInput: FunctionComponent<Props> = ({
             currentLine={[currentLine, setCurrentLineRaw]}
             coordinates={inputCoordinates}
             isStuckedToLeft={size === 'slim'}
-          ></HashtagSuggestion>,
+          />,
           document.body,
         )}
 
-      {(isInputActive || warningMessage) && isWarning && (
-        <WarningMessage message={warningMessage}></WarningMessage>
+      {(isInputActive || !!warningMessage) && isWarning && 
+        createPortal(
+        <WarningMessage
+          message={warningMessage}
+          coordinates={inputCoordinates}
+        />,
+        document.body
       )}
     </div>
   );

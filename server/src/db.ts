@@ -1,7 +1,9 @@
 import { connect, model, Schema } from 'mongoose';
+import dotenv from 'dotenv';
 
-const server = 'localhost:27017';
-const database = 'memes';
+dotenv.config();
+
+const uri = `mongodb://${process.env.MONGO_INITDB_ROOT_USERNAME}:${process.env.MONGO_INITDB_ROOT_PASSWORD}@mongo:27017/${process.env.MONGO_INITDB_DATABASE}`;
 
 class Database {
   constructor() {
@@ -9,7 +11,7 @@ class Database {
   }
 
   #connect() {
-    connect(`mongodb://${server}/${database}`)
+    connect(uri)
       .then(() => {
         console.log('🟢 Database connection successful');
       })

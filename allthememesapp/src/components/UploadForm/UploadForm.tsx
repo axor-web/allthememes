@@ -54,7 +54,7 @@ export const UploadForm: FunctionComponent = () => {
         dispatch(imageActions.setIsWarning(true));
         dispatch(
           imageActions.setWarningMessage(
-            'You have to upload a picture for the meme',
+            'You must upload a picture for the meme',
           ),
         );
       }

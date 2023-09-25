@@ -4,12 +4,14 @@
   "description": "test server for allthememes project",
   "main": "./dist/router.js",
   "scripts": {
-    "start": "tsc && node --watch ./dist/router.js",
+    "run": "tsc && docker-compose up --build -d && docker-compose logs -f -t app",
+    "stop": "docker-compose stop",
     "build": "tsc",
     "lint": "npx eslint .",
     "format": "prettier --check .",
     "format:fix": "prettier --write .",
-    "precommit": "npm run lint && npm run format:fix"
+    "precommit": "npm run lint && npm run build && npm run format:fix",
+    "start": "tsc && npm run lint && node --watch ./dist/router.js"
   },
   "author": "Alexey Koval",
   "license": "ISC",
