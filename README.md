@@ -28,7 +28,7 @@ Technologies...
    * ```npm run run```
 4. Start frontend in 'allthememesapp' folder:
    * ```npm run build && npm run start```
-  or
+   * or
    * ```npm run dev```
 5. Open project at <a href="http://localhost:3000/" target="_blank">localhost:3000</a> in your browser
 6. Try it!
