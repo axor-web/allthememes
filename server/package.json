@@ -36,5 +36,11 @@
     "mongodb": "^5.7.0",
     "mongoose": "^7.5.2",
     "openai": "^4.10.0"
+  },
+  "lint-staged":{
+    "**/*.{js,ts}":[
+      "npx prettier --write",
+      "npx eslint --fix"
+    ]
   }
 }
