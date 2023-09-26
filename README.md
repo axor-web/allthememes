@@ -13,6 +13,8 @@ You can:
 * Find your memes by hashtags
 * Download your memes
 * Upload your new memes
+* Delete your memes
+* Edit your memes (in development)
 * Find your memes by prompt for ChatGPT (You will need to specify the OpenAI API key)
 
 ## Used technologies:
