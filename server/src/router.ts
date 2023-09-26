@@ -6,12 +6,25 @@ import { memesByQueryRouter } from './routes/memesByQuery.js';
 import { hashtagsRouter } from './routes/hashtags.js';
 import { imageRouter } from './routes/image.js';
 import { binaryImageRouter } from './routes/binaryimage.js';
+import { deleteMemeRouter } from './routes/deletememe.js';
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
 import compression from 'http-compression';
 import dotenv from 'dotenv';
+import { existsSync } from 'fs';
 
-dotenv.config();
+if (existsSync('.env')) {
+  dotenv.config({ path: '.env' });
+} else {
+  console.log(
+    "🔴 WARNING! Server can't find .env variables! This will lead to errors while working!",
+  );
+}
+
+if (existsSync('.env.local')) {
+  console.log('Using variables from .env.local');
+  dotenv.config({ path: '.env.local', override: true });
+}
 
 const port = process.env.PORT || 3001;
 
@@ -30,6 +43,7 @@ app.use('/memesByQuery', memesByQueryRouter);
 app.use('/hashtags', hashtagsRouter);
 app.use('/image', imageRouter);
 app.use('/binaryimage', binaryImageRouter);
+app.use('/deletememe', deleteMemeRouter);
 app.use((_, response) => {
   console.log('🟠 The requested resource was not found.');
   response.sendStatus(404);

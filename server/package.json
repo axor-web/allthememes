@@ -5,7 +5,7 @@
   "main": "./dist/router.js",
   "scripts": {
     "run": "tsc && docker-compose up --build -d && docker-compose logs -f -t app",
-    "stop": "docker-compose stop",
+    "stop": "docker-compose stop && docker image prune -f",
     "build": "tsc",
     "lint": "npx eslint .",
     "format": "prettier --check .",
@@ -24,6 +24,7 @@
     "@typescript-eslint/parser": "^6.7.2",
     "cors": "^2.8.5",
     "eslint": "^8.50.0",
+    "eslint-config-prettier": "^9.0.0",
     "typescript": "^5.1.6",
     "typescript-eslint": "^0.0.1-alpha.0"
   },
@@ -37,8 +38,8 @@
     "mongoose": "^7.5.2",
     "openai": "^4.10.0"
   },
-  "lint-staged":{
-    "**/*.{js,ts}":[
+  "lint-staged": {
+    "**/*.{js,ts}": [
       "npx prettier --write",
       "npx eslint --fix"
     ]

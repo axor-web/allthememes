@@ -7,7 +7,7 @@ import dotenv from 'dotenv';
 import OpenAI from 'openai';
 
 const router = Router();
-dotenv.config();
+dotenv.config({ path: '.env.local', override: true });
 
 const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY,
@@ -37,7 +37,7 @@ All hashtags must be a singular noun.`;
         model: 'gpt-3.5-turbo',
         messages: [{ role: 'user', content: prompt }],
       });
-      console.log(completion.choices[0].message.content);
+
       requiredHashtags =
         completion.choices[0].message.content?.split(/,\s*|\s+/) ?? [];
 
