@@ -7,6 +7,8 @@ const initialState: IStatusState = {
   isLoading: false,
   isUploading: false,
   isRetry: false,
+  isDelete: false,
+  isEdit: false,
   isGoToMainPageLinkVisible: false,
   isRetryButtonVisible: false,
 };
@@ -29,6 +31,12 @@ const statusSlice = createSlice({
     },
     setIsRetry: (state: IStatusState, { payload }: { payload: boolean }) => {
       state.isRetry = payload;
+    },
+    setIsDelete: (state: IStatusState, { payload }: { payload: boolean }) => {
+      state.isDelete = payload;
+    },
+    setIsEdit: (state: IStatusState, { payload }: { payload: boolean }) => {
+      state.isEdit = payload;
     },
     setIsGoToMainPageLinkVisible: (
       state: IStatusState,
@@ -58,6 +66,9 @@ export const selectIsLoading = (state: RootState) =>
 export const selectIsUploading = (state: RootState) =>
   selectStatus(state).isUploading;
 export const selectIsRetry = (state: RootState) => selectStatus(state).isRetry;
+export const selectIsDelete = (state: RootState) =>
+  selectStatus(state).isDelete;
+export const selectIsEdit = (state: RootState) => selectStatus(state).isEdit;
 export const selectIsGoToMainPageLinkVisible = (state: RootState) =>
   selectStatus(state).isGoToMainPageLinkVisible;
 export const selectIsRetryButtonVisible = (state: RootState) =>

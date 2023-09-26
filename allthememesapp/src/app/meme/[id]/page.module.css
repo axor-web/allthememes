@@ -1,0 +1,10 @@
+.meme-section {
+  max-height: 100%;
+  transition:
+    opacity 0.3s,
+    max-height 0.3s;
+}
+.meme-section_hidden {
+  opacity: 0;
+  max-height: 0;
+}

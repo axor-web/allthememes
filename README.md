@@ -30,8 +30,9 @@ You can:
 ## How to start project locally
 
 1. Install <a href="https://www.docker.com/products/docker-desktop/" target="_blank">Docker</a> on your machine
-2. Install packages:
+2. Install packages and husky:
    * ```npm i```
+   * ```npm run prepare```
 3. Start server in 'server' folder using Docker:
    * ```npm run run```
 4. Start frontend in 'allthememesapp' folder:

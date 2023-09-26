@@ -51,7 +51,7 @@ export const StatusHead: FunctionComponent = () => {
           </button>
         )}
         {isGoToMainPageLinkVisible && (
-          <Link href={'./'} className={linkStyles.link} onClick={hideButtons}>
+          <Link href={'/'} className={linkStyles.link} onClick={hideButtons}>
             Go to Main page
           </Link>
         )}

@@ -3,8 +3,11 @@
   height: auto;
 
   display: grid;
-  grid-template-columns: minmax(300px, 800px) minmax(200px, 1fr);
-  grid-template-areas: 'image hashtags';
+  grid-template-columns: minmax(300px, 800px) minmax(100px, 1fr) minmax(100px, 1fr);
+  grid-template-rows: 1fr min-content;
+  grid-template-areas:
+    'image hashtags hashtags'
+    'image edit delete';
   gap: 12px;
 }
 
@@ -156,13 +159,23 @@
   background-color: var(--translucentBackgroundColor);
 }
 
+.delete-button {
+  grid-area: delete;
+}
+
+.edit-button {
+  grid-area: edit;
+}
+
 @media (max-width: 600px) {
   .meme-page {
     grid-template-columns: 1fr;
-    grid-template-rows: 1fr min-content;
+    grid-template-rows: 1fr min-content min-content min-content;
     grid-template-areas:
       'image'
-      'hashtags';
+      'hashtags'
+      'edit'
+      'delete';
   }
 
   .meme-card .meme-download {

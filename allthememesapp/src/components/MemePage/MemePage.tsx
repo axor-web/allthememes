@@ -20,6 +20,8 @@ import IMeme from '@/types/IMeme';
 import { notFound } from 'next/navigation';
 import { getBinaryImage } from '@/api/getBinaryImage';
 import IBinaryImage from '@/types/IBinaryImage';
+import { DeleteButton } from '../DeleteButton/DeleteButton';
+import { EditButton } from '../EditButton/EditButton';
 
 interface Props {
   memeId: string;
@@ -66,7 +68,12 @@ export const MemePage: FunctionComponent<Props> = ({ memeId = '' }) => {
 
   const isLoading = !meme;
 
-  let { img = '', format = '', hashtags = [] } = isLoading ? {} : meme;
+  let {
+    img = '',
+    format = '',
+    hashtags = [],
+    _id = '',
+  } = isLoading ? {} : meme;
 
   if (!isLoading && !('_id' in meme)) {
     return notFound();
@@ -124,6 +131,9 @@ export const MemePage: FunctionComponent<Props> = ({ memeId = '' }) => {
           </li>
         ))}
       </ul>
+
+      <EditButton className={styles['edit-button']} href={`/edit/${_id}`} />
+      <DeleteButton className={styles['delete-button']} memeId={_id} />
     </div>
   );
 };

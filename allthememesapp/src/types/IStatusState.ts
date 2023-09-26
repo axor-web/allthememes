@@ -3,6 +3,8 @@ export default interface IStatusState {
   isLoading?: boolean;
   isUploading?: boolean;
   isRetry?: boolean;
+  isDelete?: boolean;
+  isEdit?: boolean;
   isRetryButtonVisible?: boolean;
   isGoToMainPageLinkVisible?: boolean;
 }
