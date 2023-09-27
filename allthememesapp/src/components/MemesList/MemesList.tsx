@@ -48,15 +48,16 @@ export const MemesList: FunctionComponent = () => {
           }
 
           dispatch(hashtagActions.setIsFirstSearch(false));
+          dispatch(hashtagActions.setIsSearch(false));
         })
         .catch(() => {
           dispatch(statusActions.setStatus('Error while finding memes :<'));
           dispatch(statusActions.setIsRetryButtonVisible(true));
+          dispatch(hashtagActions.setIsSearch(false));
         })
         .finally(() => {
-          dispatch(statusActions.setIsLoading(false));
-          dispatch(hashtagActions.setIsSearch(false));
           dispatch(statusActions.setIsRetry(false));
+          dispatch(statusActions.setIsLoading(false));
         });
     }
   }, [isSearch, hashtags, dispatch, isFirstSearch, mode, prompt, isRetry]);
