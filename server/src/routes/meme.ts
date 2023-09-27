@@ -8,7 +8,7 @@ async function attachMemeToHashtags(
     unknown,
     NonNullable<unknown>,
     { hashtags: string[]; img: string }
-  > & { _id: Types.ObjectId },
+  > & { _id: Types.ObjectId | string },
   hashtags: string[],
 ) {
   await Promise.all(

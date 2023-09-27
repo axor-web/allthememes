@@ -11,6 +11,7 @@ const initialState: IStatusState = {
   isEdit: false,
   isGoToMainPageLinkVisible: false,
   isRetryButtonVisible: false,
+  isUploadButtonVisible: false,
 };
 
 const statusSlice = createSlice({
@@ -50,6 +51,12 @@ const statusSlice = createSlice({
     ) => {
       state.isRetryButtonVisible = payload;
     },
+    setIsUploadButtonVisible: (
+      state: IStatusState,
+      { payload }: { payload: boolean },
+    ) => {
+      state.isUploadButtonVisible = payload;
+    },
 
     reset: () => initialState,
   },
@@ -73,3 +80,6 @@ export const selectIsGoToMainPageLinkVisible = (state: RootState) =>
   selectStatus(state).isGoToMainPageLinkVisible;
 export const selectIsRetryButtonVisible = (state: RootState) =>
   selectStatus(state).isRetryButtonVisible;
+export const selectIsUploadButtonVisible = (state: RootState) => {
+  selectStatus(state).isUploadButtonVisible;
+};

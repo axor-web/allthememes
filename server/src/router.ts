@@ -12,6 +12,7 @@ import { deleteMemeRouter } from './routes/deletememe.js';
 import compression from 'http-compression';
 import dotenv from 'dotenv';
 import { existsSync } from 'fs';
+import { updateMemeRouter } from './routes/updatememe.js';
 
 if (existsSync('.env')) {
   dotenv.config({ path: '.env' });
@@ -44,6 +45,7 @@ app.use('/hashtags', hashtagsRouter);
 app.use('/image', imageRouter);
 app.use('/binaryimage', binaryImageRouter);
 app.use('/deletememe', deleteMemeRouter);
+app.use('/updatememe', updateMemeRouter);
 app.use((_, response) => {
   console.log('🟠 The requested resource was not found.');
   response.sendStatus(404);

@@ -14,7 +14,7 @@ You can:
 * Download your memes
 * Upload your new memes
 * Delete your memes
-* Edit your memes (in development)
+* Edit your memes
 * Find your memes by prompt for ChatGPT (You will need to specify the OpenAI API key)
 
 ## Used technologies:

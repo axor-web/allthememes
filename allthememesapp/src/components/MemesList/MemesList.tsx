@@ -13,7 +13,11 @@ import {
   selectMode,
   selectPrompt,
 } from '@/redux/features/hashtags';
-import { selectIsLoading, statusActions } from '@/redux/features/statusHeader';
+import {
+  selectIsLoading,
+  selectIsRetry,
+  statusActions,
+} from '@/redux/features/statusHeader';
 import { IMemes } from '@/types/IMemes';
 import { getMemesByQuery } from '@/api/getMemesByQuery';
 
@@ -24,35 +28,38 @@ export const MemesList: FunctionComponent = () => {
   const isSearch = useSelector(selectIsSearch);
   const isFirstSearch = useSelector(selectIsFirstSearch);
   const isLoading = useSelector(selectIsLoading);
+  const isRetry = useSelector(selectIsRetry);
 
   const dispatch = useDispatch();
 
   const [memes, setMemes]: [IMemes | undefined, Function] = useState();
 
   useEffect(() => {
-    if (isSearch) {
+    if (isSearch || isRetry) {
       (mode ? getMemesByQuery(prompt) : getMemes(hashtags))
         .then((response) => {
           setMemes(response);
 
           if (!response?.length) {
             dispatch(statusActions.setStatus('Memes not found :<'));
+            dispatch(statusActions.setIsUploadButtonVisible(true));
           } else if (!isFirstSearch) {
             dispatch(statusActions.setStatus('Memes found! :3'));
           }
 
           dispatch(hashtagActions.setIsFirstSearch(false));
-
-          dispatch(statusActions.setIsLoading(false));
-          dispatch(hashtagActions.setIsSearch(false));
         })
         .catch(() => {
           dispatch(statusActions.setStatus('Error while finding memes :<'));
+          dispatch(statusActions.setIsRetryButtonVisible(true));
+        })
+        .finally(() => {
           dispatch(statusActions.setIsLoading(false));
           dispatch(hashtagActions.setIsSearch(false));
+          dispatch(statusActions.setIsRetry(false));
         });
     }
-  }, [isSearch, hashtags, dispatch, isFirstSearch, mode, prompt]);
+  }, [isSearch, hashtags, dispatch, isFirstSearch, mode, prompt, isRetry]);
 
   return (
     <section>

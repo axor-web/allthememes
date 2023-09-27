@@ -1,3 +1,5 @@
+import IMeme from '@/types/IMeme';
+
 export const getMeme = async (id: string) => {
   if (!id) {
     return {};
@@ -15,7 +17,7 @@ export const getMeme = async (id: string) => {
     return {};
   }
 
-  const meme = await response.json();
+  const meme: IMeme = await response.json();
 
   return meme;
 };

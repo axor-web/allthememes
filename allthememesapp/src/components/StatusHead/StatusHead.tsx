@@ -10,13 +10,19 @@ import styles from './StatusHead.module.css';
 import linkStyles from '../../styles/link.module.css';
 
 export const StatusHead: FunctionComponent = () => {
-  const { status, isLoading, isRetryButtonVisible, isGoToMainPageLinkVisible } =
-    useSelector((state: RootState) => selectStatus(state));
+  const {
+    status,
+    isLoading,
+    isRetryButtonVisible,
+    isGoToMainPageLinkVisible,
+    isUploadButtonVisible,
+  } = useSelector((state: RootState) => selectStatus(state));
   const dispatch = useDispatch();
 
   function hideButtons() {
     dispatch(statusActions.setIsGoToMainPageLinkVisible(false));
     dispatch(statusActions.setIsRetryButtonVisible(false));
+    dispatch(statusActions.setIsUploadButtonVisible(false));
   }
 
   return (
@@ -53,6 +59,15 @@ export const StatusHead: FunctionComponent = () => {
         {isGoToMainPageLinkVisible && (
           <Link href={'/'} className={linkStyles.link} onClick={hideButtons}>
             Go to Main page
+          </Link>
+        )}
+        {isUploadButtonVisible && (
+          <Link
+            href={'/upload'}
+            className={linkStyles.link}
+            onClick={hideButtons}
+          >
+            Upload your meme!
           </Link>
         )}
       </nav>

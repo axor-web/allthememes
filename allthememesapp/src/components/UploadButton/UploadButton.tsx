@@ -5,11 +5,13 @@ import classNames from 'classnames';
 interface Props {
   onClickHandler: MouseEventHandler;
   className?: string;
+  text?: string;
 }
 
 export const UploadButton: FunctionComponent<Props> = ({
   onClickHandler,
   className,
+  text = 'UPLOAD',
 }) => {
   return (
     <button
@@ -20,7 +22,7 @@ export const UploadButton: FunctionComponent<Props> = ({
       type="submit"
       className={classNames(styles.button, styles.button_size_huge, className)}
     >
-      UPLOAD
+      {text}
     </button>
   );
 };

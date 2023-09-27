@@ -21,6 +21,14 @@
 .upload {
   grid-area: upload;
 }
+.image {
+  grid-area: upload;
+  aspect-ratio: 1;
+  position: relative;
+  overflow: hidden;
+  border-radius: 20px;
+  background-color: var(--darkGrey);
+}
 .hashtags {
   grid-area: hashtags;
 }

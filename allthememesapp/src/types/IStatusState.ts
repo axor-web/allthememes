@@ -7,4 +7,5 @@ export default interface IStatusState {
   isEdit?: boolean;
   isRetryButtonVisible?: boolean;
   isGoToMainPageLinkVisible?: boolean;
+  isUploadButtonVisible?: boolean;
 }
