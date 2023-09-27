@@ -319,7 +319,10 @@ export const HashtagInput: FunctionComponent<Props> = ({
         createPortal(
           <WarningMessage
             message={warningMessage}
-            coordinates={inputCoordinates}
+            coordinates={
+              input.current?.parentElement?.getBoundingClientRect() ??
+              inputCoordinates
+            }
           />,
           document.body,
         )}

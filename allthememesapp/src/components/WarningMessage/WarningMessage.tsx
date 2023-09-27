@@ -17,9 +17,7 @@ export const WarningMessage: FunctionComponent<Props> = ({
         coordinates
           ? {
               top: `${
-                (coordinates?.top ?? 0) +
-                document.documentElement.scrollTop -
-                12
+                (coordinates?.top ?? 0) + document.documentElement.scrollTop
               }px`,
               left: `${
                 ((coordinates?.left ?? 0) + (coordinates?.right ?? 0)) / 2
