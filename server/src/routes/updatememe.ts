@@ -1,5 +1,7 @@
 import { Router } from 'express';
 import { MemeModel } from '../db.js';
+import attachMemeToHashtags from '../helpers/attachMemeToHashtags.js';
+import deleteMemeFromHashtags from '../helpers/deleteMemeFromHashtags.js';
 
 const router = Router();
 
@@ -14,12 +16,25 @@ router.post('/:id', async (request, response) => {
   }
 
   try {
-    const dbResponse = await MemeModel.findByIdAndUpdate(id, meme);
+    const oldMeme = await MemeModel.findById(id);
 
-    if (!dbResponse) {
+    if (!oldMeme) {
       response.sendStatus(400);
       return;
     }
+
+    const deletedHashtags = [];
+
+    for (const hashtag of oldMeme.hashtags) {
+      if (!meme.hashtags.includes(hashtag)) {
+        deletedHashtags.push(hashtag);
+      }
+    }
+
+    await MemeModel.findByIdAndUpdate(oldMeme._id, meme);
+
+    await attachMemeToHashtags(oldMeme, meme.hashtags);
+    await deleteMemeFromHashtags(oldMeme, deletedHashtags);
 
     response.sendStatus(200);
   } catch (error) {

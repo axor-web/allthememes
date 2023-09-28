@@ -1,34 +1,6 @@
 import { Router } from 'express';
-import { HashtagModel, MemeModel } from '../db.js';
-import { Document, Types } from 'mongoose';
-
-async function deleteMemeFromHashtags(
-  memeDocument: Document<
-    unknown,
-    NonNullable<unknown>,
-    { hashtags: string[]; img: string }
-  > & { _id: Types.ObjectId },
-  hashtags: string[],
-) {
-  await Promise.all(
-    hashtags.map(async (hashtag: string) => {
-      const hashtagDocument = await HashtagModel.findOne({ name: hashtag });
-
-      if (hashtagDocument) {
-        hashtagDocument.memesIds.splice(
-          hashtagDocument.memesIds.indexOf(memeDocument._id),
-          1,
-        );
-        await hashtagDocument.save();
-      } else {
-        await new HashtagModel({
-          name: hashtag,
-          memesIds: [memeDocument._id],
-        }).save();
-      }
-    }),
-  );
-}
+import { MemeModel } from '../db.js';
+import deleteMemeFromHashtags from '../helpers/deleteMemeFromHashtags.js';
 
 const router = Router();
 
@@ -41,14 +13,16 @@ router.post('/:id', async (request, response) => {
   }
 
   try {
-    const dbResponse = await MemeModel.findByIdAndRemove(id);
+    const meme = await MemeModel.findById(id);
 
-    if (!dbResponse) {
+    if (!meme) {
       response.sendStatus(400);
       return;
     }
 
-    await deleteMemeFromHashtags(dbResponse, dbResponse.hashtags);
+    await MemeModel.findByIdAndRemove(id);
+
+    await deleteMemeFromHashtags(meme, meme.hashtags);
     response.sendStatus(200);
   } catch (error) {
     console.log('There is an error!' + '\n' + error);
