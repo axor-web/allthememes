@@ -12,12 +12,14 @@ interface Props {
   onClick?: Function;
   className?: string;
   memeId?: string;
+  disabled?: boolean;
 }
 
 export const DeleteButton: FunctionComponent<Props> = ({
   onClick,
   className = '',
   memeId = '',
+  disabled = false,
 }) => {
   const dispatch = useDispatch();
 
@@ -59,6 +61,7 @@ export const DeleteButton: FunctionComponent<Props> = ({
         styles.button,
         className,
       )}
+      disabled={disabled}
     >
       Delete
     </button>

@@ -33,6 +33,7 @@ import { updateMeme } from '@/api/updateMeme';
 interface Props {
   mode?: 'edit' | 'upload';
   meme?: IMeme;
+  loading?: boolean;
 }
 
 export const UploadForm: FunctionComponent<Props> = ({

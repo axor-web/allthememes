@@ -7,15 +7,17 @@ import Link from 'next/link';
 interface Props {
   href?: string;
   className?: string;
+  disabled?: boolean;
 }
 
 export const EditButton: FunctionComponent<Props> = ({
   href = '',
   className,
+  disabled = false,
 }) => {
   return (
     <Link
-      href={href}
+      href={disabled ? '' : href}
       className={classNames(
         buttonStyles.button,
         buttonStyles.button_size_huge,

@@ -3,6 +3,7 @@
 import { getMeme } from '@/api/getMeme';
 import { StatusHead } from '@/components/StatusHead/StatusHead';
 import { UploadForm } from '@/components/UploadForm/UploadForm';
+import { UploadFormLoading } from '@/components/UploadForm/UploadFormLoading';
 import { statusActions } from '@/redux/features/statusHeader';
 import IMeme from '@/types/IMeme';
 import { notFound } from 'next/navigation';
@@ -41,7 +42,7 @@ export default function Page({ params }: { params: { id: string } }) {
   return (
     <>
       <StatusHead />
-      {!isFetch && <UploadForm mode="edit" meme={meme} />}
+      {isFetch ? <UploadFormLoading /> : <UploadForm mode="edit" meme={meme} />}
     </>
   );
 }

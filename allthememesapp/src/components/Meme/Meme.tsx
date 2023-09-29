@@ -10,11 +10,12 @@ import {
 import Image from 'next/image';
 import { NoImageSvg } from '../NoImageSvg/NoImageSvg';
 import { DownloadSvg } from '../DownloadSvg/DownloadSvg';
-import styles from './Meme.module.css';
 import Link from 'next/link';
 import classNames from 'classnames';
 import { getMeme } from '@/api/getMeme';
 import IMeme from '@/types/IMeme';
+import loadingStyles from '../../styles/loading.module.css';
+import styles from './Meme.module.css';
 
 interface Props {
   memeId?: string;
@@ -64,7 +65,7 @@ export const Meme: FunctionComponent<Props> = ({
     <li
       className={classNames(
         styles['meme-card'],
-        isLoading ? styles['meme-card_loading'] : '',
+        isLoading ? loadingStyles['_loading'] : '',
       )}
       ref={memeCard}
     >

@@ -22,6 +22,7 @@ import { getBinaryImage } from '@/api/getBinaryImage';
 import IBinaryImage from '@/types/IBinaryImage';
 import { DeleteButton } from '../DeleteButton/DeleteButton';
 import { EditButton } from '../EditButton/EditButton';
+import loadingStyles from '../../styles/loading.module.css';
 
 interface Props {
   memeId: string;
@@ -84,7 +85,7 @@ export const MemePage: FunctionComponent<Props> = ({ memeId = '' }) => {
       <div
         className={classNames(
           styles['meme-card'],
-          isLoading ? styles['meme-card_loading'] : '',
+          isLoading ? loadingStyles['_loading'] : '',
         )}
         ref={memeCard}
       >
@@ -124,7 +125,12 @@ export const MemePage: FunctionComponent<Props> = ({ memeId = '' }) => {
         )}
       </div>
 
-      <ul className={styles['meme-hashtags']}>
+      <ul
+        className={classNames(
+          styles['meme-hashtags'],
+          isLoading ? loadingStyles._loading : '',
+        )}
+      >
         {hashtags.map((hashtag, index) => (
           <li key={index} className={styles['meme-hashtag']}>
             {'#' + hashtag}
@@ -132,8 +138,22 @@ export const MemePage: FunctionComponent<Props> = ({ memeId = '' }) => {
         ))}
       </ul>
 
-      <EditButton className={styles['edit-button']} href={`/edit/${_id}`} />
-      <DeleteButton className={styles['delete-button']} memeId={_id} />
+      <EditButton
+        className={classNames(
+          styles['edit-button'],
+          isLoading ? loadingStyles._loading : '',
+        )}
+        href={`/edit/${_id}`}
+        disabled={isLoading}
+      />
+      <DeleteButton
+        className={classNames(
+          styles['delete-button'],
+          isLoading ? loadingStyles._loading : '',
+        )}
+        memeId={_id}
+        disabled={isLoading}
+      />
     </div>
   );
 };
