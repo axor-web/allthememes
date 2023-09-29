@@ -291,6 +291,7 @@ export const HashtagInput: FunctionComponent<Props> = ({
         onFocus={() => {
           dispatch(hashtagActions.setIsWarning(false));
           setIsInputActive(true);
+          setInputCoordinates();
         }}
         onBlur={() => {
           dispatch(hashtagActions.setIsWarning(false));
